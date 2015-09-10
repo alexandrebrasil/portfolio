@@ -4,15 +4,17 @@
   "description": "Investment portfolio tracker",
   "main": "index.js",
   "scripts": {
-    "test": "mocha test/server/**/*.js"
+    "test": "istanbul cover node_modules/mocha/bin/_mocha -- test/server/ -R spec"
   },
   "author": "Alexandre Brasil",
   "license": "ISC",
   "devDependencies": {
     "chai": "^3.2.0",
+    "istanbul": "^0.3.19",
     "karma": "^0.13.9",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^0.2.0",
+    "karma-coverage": "^0.5.2",
     "karma-mocha": "^0.2.0",
     "karma-mocha-reporter": "^1.1.1",
     "mocha": "^2.3.2"
