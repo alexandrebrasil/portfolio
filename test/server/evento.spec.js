@@ -1,6 +1,6 @@
 'use strict';
 
-var stockEvent = require('../../app/server/stock-event.js');
+var stockEvent = require('../../app/server/evento.js');
 var expect = require('chai').expect;
 
 describe('Ciclo de vida de uma ação', function() {
