@@ -60,6 +60,10 @@ function Carteira() {
 		adicionarEvento(codigoAcao, new Dividendos(valorUnitario, dataEx, dataPagamento));
 	}
 
+	this.jcp = function(codigoAcao, valorUnitario, dataEx, dataPagamento) {
+		adicionarEvento(codigoAcao, new JCP(valorUnitario, dataEx, dataPagamento))
+	}
+
 	function adicionarEvento(codigoAcao, evento) {
 		var acao = empresas.map(function(empresa) {
 								return empresa.acoes;
@@ -169,10 +173,32 @@ function Dividendos(valorUnitario, dataEx, dataPagamento) {
 	this.__defineGetter__('data', function() { return _dataEx })
 	this.__defineGetter__('custoFinanceiro', function() { return - resultado() })
 	this.__defineGetter__('custoContabil', function() { return 0 })
-	this.__defineGetter__('resultado', function() { return resultado() })
+	this.__defineGetter__('resultado', resultado)
 
 	function resultado() {
 		return Math.round(_quantidadeAcoes * _valorUnitario * 100) / 100;
+	}
+}
+
+function JCP(valorUnitario, dataEx, dataPagamento) {
+	var _valorUnitario = valorUnitario,
+		_dataEx = dataEx,
+		_dataPagamento = dataPagamento,
+		_quantidadeAcoes;
+
+	this.quantidade	= function(quantidade) {
+		_quantidadeAcoes = quantidade;
+		return 0;
+	}
+
+	this.__defineGetter__('data', function() { return _dataEx })
+	this.__defineGetter__('custoFinanceiro', function() { return -resultado() })
+	this.__defineGetter__('custoContabil', function () { return 0 })
+	this.__defineGetter__('resultado', resultado)
+
+	function resultado() {
+		// Descontando 15% de IR do valor bruto
+		return Math.round(_quantidadeAcoes * _valorUnitario * 0.85 * 100) / 100;
 	}
 }
 

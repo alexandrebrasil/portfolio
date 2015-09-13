@@ -143,7 +143,7 @@ describe('Carteira de investimentos', function(){
 				carteira.comprar('CIEL3', 100, 20, '2013-08-12');
 			})
 
-			it('Não deve alterar a quantidade de alções', function() {
+			it('Não deve alterar a quantidade de ações', function() {
 				carteira.dividendos('CIEL3', 1, '2013-08-13', '2013-08-13')
 
 				expect(ciel3.quantidade).to.be.equal(100);
@@ -167,7 +167,7 @@ describe('Carteira de investimentos', function(){
 				expect(ciel3.custoUnitarioContabil).to.be.equal(20.00);
 			})
 
-			it('Devem ser reportados nos resultados financeiros isentos de IR da ação, empresa e carteira', function() {
+			it('Devem ser reportados nos resultados financeiros liquidos da ação, empresa e carteira', function() {
 				carteira.comprar('CIEL3', 100, 20, '2013-08-14');
 				carteira.dividendos('CIEL3', 1, '2013-08-13', '2013-08-13');
 
@@ -175,6 +175,44 @@ describe('Carteira de investimentos', function(){
 				expect(cielo.resultado).to.be.equal(100);
 				expect(carteira.resultado).to.be.equal(100);
 			})
+		})
+
+		context('Juros sobre Capital Próprio', function() {
+			beforeEach('Configurar cateira com algumas ações', function() {
+				carteira.comprar('CIEL3', 100, 20, '2013-08-12');
+			})
+
+			it('Não deve alterar a quantidade ações', function() {
+				carteira.jcp('CIEL3', 0.40, '2013-08-14', '2013-09-20');
+				expect(ciel3.quantidade).to.be.equal(100);
+			})
+
+			it('Devem baixar o custo financeiro total e unitário em seu valor liquido (descontando 15% de IR), mas não devem alterar os contábeis', function() {
+				carteira.jcp('CIEL3', 0.40, '2013-08-14', '2013-09-20');
+
+				expect(ciel3.custoUnitario).to.be.equal(19.66);
+				expect(ciel3.custoFinanceiro).to.be.equal(1966);
+				expect(ciel3.custoUnitarioContabil).to.be.equal(20.00);
+				expect(ciel3.custoContabil).to.be.equal(2000);
+			})
+
+			it('Devem ser relativos à quantidade na carteira da data-ex', function() {
+				carteira.comprar('CIEL3', 100, 20.00, '2013-09-19');
+				carteira.jcp('CIEL3', 0.40, '2013-08-14', '2013-09-20');
+				
+				expect(ciel3.custoUnitario).to.be.equal(19.83);
+				expect(ciel3.custoFinanceiro).to.be.equal(3966);
+				expect(ciel3.custoContabil).to.be.equal(4000);
+				expect(ciel3.custoUnitarioContabil).to.be.equal(20.00);			
+			});
+
+			it('Devem ter seu valor liquido reportado no resultado financeiro liquidos', function() {
+				carteira.jcp('CIEL3', 0.40, '2013-08-14', '2013-09-20');
+
+				expect(ciel3.resultado).to.be.equal(34.00);
+				expect(cielo.resultado).to.be.equal(34.00);
+				expect(carteira.resultado).to.be.equal(34.00);				
+			});
 		})
 	})
 })
