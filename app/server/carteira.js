@@ -40,12 +40,24 @@ function Carteira() {
 		return empresa;
 	}
 
+	this.__defineGetter__('resultado', function() {
+		var resultado = 0;
+		empresas.forEach(function(empresa) {
+			resultado += empresa.resultado;
+		})
+		return resultado;
+	})
+
 	this.comprar = function(codigoAcao, quantidade, valor, data) {
 		adicionarEvento(codigoAcao, new Compra(quantidade, valor, data, corretagem, emolumentos, liquidacao))
 	}
 
 	this.bonificar = function(codigoAcao, quantidade, custoContabilAcaoBonificada, dataBonificacao) {
 		adicionarEvento(codigoAcao, new Bonificacao(quantidade, custoContabilAcaoBonificada, dataBonificacao));
+	}
+
+	this.dividendos = function(codigoAcao, valorUnitario, dataEx, dataPagamento) {
+		adicionarEvento(codigoAcao, new Dividendos(valorUnitario, dataEx, dataPagamento));
 	}
 
 	function adicionarEvento(codigoAcao, evento) {
@@ -75,6 +87,15 @@ function Empresa(nome, codigoBovespa) {
 		self.acoes.push(acao);
 		return acao;
 	}
+
+	this.__defineGetter__('resultado', function() {
+		var resultado = 0;
+		self.acoes.forEach(function(acao) {
+			resultado += acao.resultado;
+		})
+	
+		return resultado;
+	})
 }
 
 function Acao(codigo) {
@@ -95,6 +116,16 @@ function Acao(codigo) {
 		eventos.sort(function(e1, e2) { return e1.data.localeCompare(e2.data) })
 		recalculaPosicao();
 	}
+
+	this.__defineGetter__('resultado', function() {
+		var resultado = 0;
+		eventos.forEach(function(evento) {
+			if(evento.resultado) 
+				resultado += evento.resultado;
+		})
+
+		return resultado;
+	})
 
 	function recalculaPosicao() {
 		_quantidade = 0, _custoFinanceiro = 0, _custoContabil = 0;
@@ -122,6 +153,27 @@ function Compra(quantidade, valorUnitario, dataCompra, corretagem, emolumentos, 
 	this.__defineGetter__('data', function() { return _dataCompra })
 	this.__defineGetter__('custoFinanceiro', function() { return _custo })
 	this.__defineGetter__('custoContabil', function() { return _custo })
+}
+
+function Dividendos(valorUnitario, dataEx, dataPagamento) {
+	var _valorUnitario = valorUnitario,
+		_dataEx = dataEx,
+		_dataPagamento = dataPagamento,
+		_quantidadeAcoes;
+
+	this.quantidade = function(quantidade) {
+		_quantidadeAcoes = quantidade;
+		return 0;
+	}
+
+	this.__defineGetter__('data', function() { return _dataEx })
+	this.__defineGetter__('custoFinanceiro', function() { return - resultado() })
+	this.__defineGetter__('custoContabil', function() { return 0 })
+	this.__defineGetter__('resultado', function() { return resultado() })
+
+	function resultado() {
+		return Math.round(_quantidadeAcoes * _valorUnitario * 100) / 100;
+	}
 }
 
 function Bonificacao(percentual, custoContabilAcaoBonificada, dataBonificacao) {

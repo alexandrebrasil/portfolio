@@ -137,5 +137,44 @@ describe('Carteira de investimentos', function(){
 				expect(ciel3.custoUnitarioContabil).to.be.equal(28.19)
 			})
 		})
+
+		context('Recebimento de divivendos', function() {
+			beforeEach('Configurar cateira com algumas ações', function() {
+				carteira.comprar('CIEL3', 100, 20, '2013-08-12');
+			})
+
+			it('Não deve alterar a quantidade de alções', function() {
+				carteira.dividendos('CIEL3', 1, '2013-08-13', '2013-08-13')
+
+				expect(ciel3.quantidade).to.be.equal(100);
+			})
+
+			it('Devem baixar o custo financeiro total e unitário, mas não devem alterar os contábeis', function() {
+				carteira.dividendos('CIEL3', 1, '2013-08-13', '2013-08-13');
+				expect(ciel3.custoFinanceiro).to.be.equal(1900);
+				expect(ciel3.custoUnitario).to.be.equal(19.00);
+				expect(ciel3.custoContabil).to.be.equal(2000);
+				expect(ciel3.custoUnitarioContabil).to.be.equal(20.00);
+			})
+
+			it('Devem ser relativos à quantidade na carteira na data-ex', function() {
+				carteira.comprar('CIEL3', 100, 20, '2013-08-14');
+				carteira.dividendos('CIEL3', 1, '2013-08-13', '2013-08-13');
+
+				expect(ciel3.custoFinanceiro).to.be.equal(3900);
+				expect(ciel3.custoUnitario).to.be.equal(19.50);
+				expect(ciel3.custoContabil).to.be.equal(4000);
+				expect(ciel3.custoUnitarioContabil).to.be.equal(20.00);
+			})
+
+			it('Devem ser reportados nos resultados financeiros isentos de IR da ação, empresa e carteira', function() {
+				carteira.comprar('CIEL3', 100, 20, '2013-08-14');
+				carteira.dividendos('CIEL3', 1, '2013-08-13', '2013-08-13');
+
+				expect(ciel3.resultado).to.be.equal(100);
+				expect(cielo.resultado).to.be.equal(100);
+				expect(carteira.resultado).to.be.equal(100);
+			})
+		})
 	})
 })
