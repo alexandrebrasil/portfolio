@@ -214,5 +214,47 @@ describe('Carteira de investimentos', function(){
 				expect(carteira.resultado).to.be.equal(34.00);				
 			});
 		})
+
+		context('Desdobramento', function() {
+			beforeEach('Configurar carteira com algumas ações', function() {
+				carteira.comprar('CIEL3', 100, 30.00, '2013-02-01');
+			})
+
+			it('Quantidade de ações deve ser multiplicada pelo fator de split, afetando os custos unitários, mas não os totais', function() {
+				carteira.desdobramento('CIEL3', 3, '2013-02-02');
+
+				expect(ciel3.quantidade).to.be.equal(300);
+				expect(ciel3.custoUnitario).to.be.equal(10.00);
+				expect(ciel3.custoUnitarioContabil).to.be.equal(10.00);
+				expect(ciel3.custoFinanceiro).to.be.equal(3000);
+				expect(ciel3.custoContabil).to.be.equal(3000);
+			})
+		})
+
+		context('Grupamento', function() {
+			it('Quantidade de ações deve ser reduzida pelo fator de grupamento, afetando os custos unitários, mas não os totais', function() {
+				carteira.comprar('CIEL3', 300, 10.00, '2013-02-01');
+				carteira.grupamento('CIEL3', 3, 15, '2013-02-02');
+
+				expect(ciel3.quantidade).to.be.equal(100);
+				expect(ciel3.custoUnitario).to.be.equal(30.00);
+				expect(ciel3.custoUnitarioContabil).to.be.equal(30.00);
+				expect(ciel3.custoFinanceiro).to.be.equal(3000);
+				expect(ciel3.custoContabil).to.be.equal(3000);
+				expect(ciel3.resultado).to.be.equal(0);
+			})
+
+			it('Caso haja sobras no grupamento, as ações "perdidas" devem ser reembolsadas em dinheiro, afetando o resultado', function() {
+				carteira.comprar('CIEL3', 100, 30.00, '2013-02-01');
+				carteira.grupamento('CIEL3', 3, 15, '2013-02-02');
+
+				expect(ciel3.quantidade).to.be.equal(33);
+				expect(ciel3.custoUnitario).to.be.equal(90.45);
+				expect(ciel3.custoUnitarioContabil).to.be.equal(90.45);
+				expect(ciel3.custoFinanceiro).to.be.equal(2985);
+				expect(ciel3.custoContabil).to.be.equal(2985);
+				expect(ciel3.resultado).to.be.equal(15);
+			})
+		})
 	})
 })

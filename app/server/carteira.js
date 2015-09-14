@@ -64,6 +64,14 @@ function Carteira() {
 		adicionarEvento(codigoAcao, new JCP(valorUnitario, dataEx, dataPagamento))
 	}
 
+	this.grupamento = function(codigoAcao, fatorGrupamento, valorReembolsoSobras, dataGrupamento) {
+		adicionarEvento(codigoAcao, new Grupamento(fatorGrupamento, valorReembolsoSobras, dataGrupamento));
+	}
+
+	this.desdobramento = function(codigoAcao, fatorDesdobramento, dataDesdobramento) {
+		adicionarEvento(codigoAcao, new Desdobramento(fatorDesdobramento, dataDesdobramento));
+	}
+
 	function adicionarEvento(codigoAcao, evento) {
 		var acao = empresas.map(function(empresa) {
 								return empresa.acoes;
@@ -216,6 +224,42 @@ function Bonificacao(percentual, custoContabilAcaoBonificada, dataBonificacao) {
 	this.quantidade = function(quantidadeAtual) {
 		_acoesBonificadas = Math.floor(quantidadeAtual * percentual / 100);
 		return _acoesBonificadas;
+	}
+}
+
+function Grupamento(fatorGrupamento, valorReembolsoSobras, dataGrupamento) {
+	var _fatorGrupamento = fatorGrupamento,
+		_valorReembolsoSobras = valorReembolsoSobras,
+		_dataGrupamento = dataGrupamento,
+		_sobras;
+
+	this.quantidade = function(quantidadeAtual) {
+		var quantidadeAgrupada = Math.floor(quantidadeAtual / _fatorGrupamento);
+		_sobras = quantidadeAtual -  quantidadeAgrupada * _fatorGrupamento;
+		
+		return - (quantidadeAtual - Math.floor(quantidadeAtual / _fatorGrupamento));
+	}
+
+	this.__defineGetter__('data', function() { return _dataGrupamento })
+	this.__defineGetter__('custoFinanceiro', function() { return - resultado() })
+	this.__defineGetter__('custoContabil', function() { return - resultado() })
+	this.__defineGetter__('resultado', resultado);
+
+	function resultado() {
+		return _sobras * _valorReembolsoSobras;
+	}
+}
+
+function Desdobramento(fatorDesdobramento, dataDesdobramento) {
+	var _fatorDesdobramento = fatorDesdobramento,
+		_dataDesdobramento = dataDesdobramento;
+
+	this.__defineGetter__('data', function() { return _dataDesdobramento })
+	this.__defineGetter__('custoFinanceiro', function() { return 0 })
+	this.__defineGetter__('custoContabil', function() { return 0 })
+
+	this.quantidade = function(quantidadeAtual) {
+		return quantidadeAtual * (_fatorDesdobramento - 1);
 	}
 }
 
