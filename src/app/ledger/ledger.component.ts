@@ -48,11 +48,13 @@ export class LedgerComponent implements OnChanges {
                         valorFinanceiroAcumulado: 0,
                         valorContabil: 0,
                         valorContabilAcumulado: 0,
-                        quantidadeAcumulada: 0
+                        quantidadeAcumulada: 0,
+                        quantidadeTransacao: 0
                     })
                 )),
                 tap(transacoes => transacoes.reduce((prev, curr) => {
-                    curr.quantidadeAcumulada = prev.quantidadeAcumulada + quantidade(curr);
+                    curr.quantidadeTransacao = quantidade(curr, prev.quantidadeAcumulada);
+                    curr.quantidadeAcumulada = prev.quantidadeAcumulada + curr.quantidadeTransacao;
                     return curr;
                 }, transacoes[0])),
                 tap(transacoes => transacoes.reduce((prev, curr) => {
@@ -85,14 +87,17 @@ interface TransacaoExtendida extends Evento {
     valorFinanceiroAcumulado: number;
     valorContabilAcumulado: number;
     quantidadeAcumulada: number;
+    quantidadeTransacao: number;
 }
 
-function quantidade(transacao: Evento): number {
+function quantidade(transacao: Evento, quantidadeAcumulada: number): number {
     switch(transacao.tipo) {
         case "compra": 
-            return transacao.quantidade;
+            return (transacao.quantidade || 0);
         case "venda":
-            return -transacao.quantidade;
+            return -(transacao.quantidade || 0);
+        case "bonificação":
+            return quantidadeAcumulada * (transacao.multiplicador || 0) / 100;
         default:
             return 0;
     }
@@ -101,9 +106,9 @@ function quantidade(transacao: Evento): number {
 function valorFinanceiro(transacao: TransacaoExtendida): number {
     switch(transacao.tipo) {
         case "compra": 
-            return - (transacao.quantidade * (transacao.valor || 0) + (transacao.taxas || 0));
+            return - ((transacao.quantidade || 0) * (transacao.valor || 0) + (transacao.taxas || 0));
         case "venda":
-            return transacao.quantidade * (transacao.valor || 0) - (transacao.taxas || 0);
+            return (transacao.quantidade || 0) * (transacao.valor || 0) - (transacao.taxas || 0);
         case "dividendos":
             return (transacao.valor || 0) * transacao.quantidadeAcumulada;
         case "jcp":
@@ -118,6 +123,8 @@ function valorContabil(transacao: TransacaoExtendida): number {
         case "compra": 
         case "venda":
             return valorFinanceiro(transacao);
+        case "bonificação":
+            return -(transacao.valor || 0) * transacao.quantidadeTransacao;
         default:
             return 0;
     }   

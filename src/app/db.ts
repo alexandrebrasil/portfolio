@@ -29,7 +29,8 @@ export interface Evento {
     ativo: string,
     tipo: TipoEvento
     data: string
-    quantidade: number
+    quantidade?: number
+    multiplicador?: number
     dataEx?: string
     valor?: number
     taxas?: number

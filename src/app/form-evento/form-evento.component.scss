@@ -15,5 +15,9 @@ form {
             display: none;
         }
     }
+
+    mat-form-field.mat-form-field-disabled.ocultavel {
+        display: none;
+    }
 }
 

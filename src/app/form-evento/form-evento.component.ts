@@ -1,3 +1,4 @@
+import { ThrowStmt } from "@angular/compiler";
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import * as moment from 'moment';
@@ -15,7 +16,14 @@ export class FormEventoComponent {
 
     @Output()
     onNovoEvento = new EventEmitter<void>();
+
     novoEvento: FormGroup;
+
+    tituloQuantidade: string;
+    tituloValor: string;
+    tituloTaxas: string;
+    tituloValorTotal: string;
+    tituloMultiplicador: string;
 
     constructor(fb: FormBuilder, private db: PortfolioDb) {
         this.novoEvento = fb.group({
@@ -23,36 +31,116 @@ export class FormEventoComponent {
             data: [moment(), Validators.required],
             dataEx: [{value: moment(), disabled: true}, Validators.required],
             quantidade: [null, Validators.required],
+            multiplicador: [null, Validators.required],
             valor: [null, Validators.required],
             taxas: [null],
             valorTotal: {value: 0, disabled: true},
         });
 
         this.novoEvento.valueChanges.subscribe(v => {
-            this.novoEvento.controls.valorTotal.setValue(v.valor * v.quantidade + v.taxas, {emitEvent: false})
-
-            if(v.tipo === "jcp") {
-                let ir = v.valor * 0.15;
-                this.novoEvento.controls.taxas.setValue(ir, {emitEvent: false});
-                this.novoEvento.controls.valorTotal.setValue(v.valor - ir, {emitEvent: false});
-            } else if(v.tipo === "dividendos") {
-                this.novoEvento.controls.taxas.setValue(0, {emitEvent: false});
-                this.novoEvento.controls.valorTotal.setValue(v.valor, {emitEvent: false});
+            if(v.tipo === 'compra') {
+                this.configuraCompra();
+            } else if(v.tipo === 'venda') {
+                this.configuraVenda();
+            } else if(v.tipo === 'jcp') {
+                this.configuraJCP();
+            } else if(v.tipo === 'dividendos') {
+                this.configuraDividendos();
+            } else if(v.tipo === 'bonificação') {
+                this.configuraBonificacao();
             }
         });
 
-        this.novoEvento.controls.tipo.valueChanges.subscribe((tipo: TipoEvento) => {
-            let possuiQuantidade = tipo === "compra" || tipo === "venda";
-            let inputDeTaxas = tipo === "compra" || tipo === "venda";
-            let possuiDataEx = tipo === "jcp" || tipo === "dividendos";
+        this.configuraCompra();
+    }
 
-            this.novoEvento.controls.quantidade[possuiQuantidade ? 'enable' : 'disable']();
-            if(!possuiQuantidade) {
-                this.novoEvento.controls.quantidade.setValue(null);
-            }
-            this.novoEvento.controls.taxas[inputDeTaxas ? 'enable' : 'disable']();
-            this.novoEvento.controls.dataEx[possuiDataEx ? 'enable' : 'disable']();
-        })
+    private configuraCompra() {
+        let controls = this.novoEvento.controls;
+        
+        controls.quantidade.enable({emitEvent: false});
+        controls.taxas.enable({emitEvent: false});
+        controls.dataEx.disable({emitEvent: false});
+        controls.multiplicador.disable({emitEvent: false});
+
+        this.tituloQuantidade = 'Quantidade adquirida';
+        this.tituloValor = 'Preço (R$)';
+        this.tituloTaxas = 'Corretagem e emolumentos';
+        this.tituloValorTotal = 'Total desembolsado';
+
+        let evento = this.novoEvento.value;
+
+        controls.valorTotal.setValue(evento.quantidade * evento.valor + evento.taxas, {emitEvent: false});
+    }
+
+    private configuraVenda() {
+        let controls = this.novoEvento.controls;
+        
+        controls.quantidade.enable({emitEvent: false});
+        controls.taxas.enable({emitEvent: false});
+        controls.dataEx.disable({emitEvent: false});
+        controls.multiplicador.disable({emitEvent: false});
+
+        this.tituloQuantidade = 'Quantidade vendida';
+        this.tituloTaxas = 'Corretagem e emolumentos';
+        this.tituloValor = 'Preço (R$)';
+        this.tituloValorTotal = 'Total recebido';
+
+        let evento = this.novoEvento.value;
+
+        controls.valorTotal.setValue(evento.quantidade * evento.valor - evento.taxas, {emitEvent: false});
+    }
+
+    private configuraJCP() {
+        let controls = this.novoEvento.controls;
+        
+        controls.quantidade.disable({emitEvent: false});
+        controls.taxas.disable({emitEvent: false});
+        controls.dataEx.enable({emitEvent: false});
+        controls.multiplicador.disable({emitEvent: false});
+
+        this.tituloValor = 'Provento bruto/ação (R$)';
+        this.tituloTaxas = 'Imposto de renda';
+        this.tituloValorTotal = 'Provento líquido/ação (R$)'
+
+        let valor = this.novoEvento.value.valor,
+            ir = valor * 0.15;
+        
+        controls.quantidade.setValue(null, {emitEvent: false});
+        controls.taxas.setValue(ir, {emitEvent: false});
+        controls.valorTotal.setValue(valor - ir, {emitEvent: false});
+    }
+
+    private configuraDividendos() {
+        let controls = this.novoEvento.controls;
+
+        controls.quantidade.disable({emitEvent: false});
+        controls.taxas.disable({emitEvent: false});
+        controls.dataEx.enable({emitEvent: false});
+        controls.multiplicador.disable({emitEvent: false});
+
+        this.tituloValor = 'Provento/ação (R$)';
+
+        let valor = this.novoEvento.value.valor;
+
+        controls.taxas.setValue(0, {emitEvent: false});
+        controls.valorTotal.setValue(valor, {emitEvent: false});
+    }
+
+    private configuraBonificacao() {
+        let controls = this.novoEvento.controls;
+
+        controls.quantidade.disable({emitEvent: false});
+        controls.taxas.disable({emitEvent: false});
+        controls.dataEx.enable({emitEvent: false});
+        controls.multiplicador.enable({emitEvent: false});
+
+        let valor = this.novoEvento.value.valor;
+
+        this.tituloMultiplicador = 'Percentual bonificado';
+        this.tituloValor = 'Preço contábil (R$)';
+
+        this.novoEvento.controls.taxas.setValue(0, {emitEvent: false});
+        this.novoEvento.controls.valorTotal.setValue(valor, {emitEvent: false});
     }
 
     async gravaNovoEvento() {

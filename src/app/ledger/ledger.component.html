@@ -23,7 +23,7 @@
     <ng-container matColumnDef="quantidade">
         <th mat-header-cell *matHeaderCellDef>Quantidade</th>
         <td mat-cell *matCellDef="let transacao">
-            {{transacao.quantidade | number}}
+            {{transacao.quantidadeTransacao | number}}
         </td>
         <td mat-footer-cell *matFooterCellDef>{{quantidadeAtual | number}}</td>
     </ng-container>
