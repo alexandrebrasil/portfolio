@@ -1,0 +1,26 @@
+@use 'theme';
+@use '~@angular/material' as mat;
+
+:host {
+    display: block;
+}
+
+table {
+    width: 100%;
+
+    .mat-column-valorFinanceiro,
+    .mat-column-valorContabil,
+    .mat-column-quantidade {
+        text-align: right;
+    }
+
+    .mat-column-acoes {
+        width: 90px;
+        text-align: right;
+    }
+
+    .mat-footer-cell {
+        color: mat.get-color-from-palette(theme.$portfolio-primary, "default");
+        font-weight: 500;
+    }
+}

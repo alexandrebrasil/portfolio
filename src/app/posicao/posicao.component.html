@@ -1,0 +1,3 @@
+<div class="mat-headline">Posição atual</div>
+<portfolio-form-evento [ativo]="ativo" (onNovoEvento)="ledger.carregaTransacoes()"></portfolio-form-evento>
+<portfolio-ledger [ativo]="ativo" #ledger></portfolio-ledger>

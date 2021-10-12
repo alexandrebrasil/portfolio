@@ -1,0 +1,59 @@
+<table mat-table [dataSource]="transacoes">
+    <ng-container matColumnDef="data">
+        <th mat-header-cell *matHeaderCellDef>Data</th>
+        <td mat-cell *matCellDef="let transacao">
+            {{transacao.data | date:'shortDate'}}
+        </td>
+        <td mat-footer-cell *matFooterCellDef>Posição atual</td>
+    </ng-container>
+    <ng-container matColumnDef="tipo">
+        <th mat-header-cell *matHeaderCellDef>Tipo</th>
+        <td mat-cell *matCellDef="let transacao">
+            {{transacao.tipo | tipoEvento}}
+        </td>
+        <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+    <ng-container matColumnDef="unitario">
+        <th mat-header-cell *matHeaderCellDef>Valor unitário</th>
+        <td mat-cell *matCellDef="let transacao">
+            {{transacao.valor | currency:'BRL':'symbol':'1.2-8'}}
+        </td>
+        <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+    <ng-container matColumnDef="quantidade">
+        <th mat-header-cell *matHeaderCellDef>Quantidade</th>
+        <td mat-cell *matCellDef="let transacao">
+            {{transacao.quantidade | number}}
+        </td>
+        <td mat-footer-cell *matFooterCellDef>{{quantidadeAtual | number}}</td>
+    </ng-container>
+    <ng-container matColumnDef="valorFinanceiro">
+        <th mat-header-cell *matHeaderCellDef>Valor financeiro</th>
+        <td mat-cell *matCellDef="let transacao">
+            {{ transacao.valorFinanceiro ? (transacao.valorFinanceiro | currency) : '-'}}
+        </td>
+        <td mat-footer-cell *matFooterCellDef>{{custoLiquido | currency}}</td>
+    </ng-container>
+    <ng-container matColumnDef="valorContabil">
+        <th mat-header-cell *matHeaderCellDef>Valor contabil</th>
+        <td mat-cell *matCellDef="let transacao">
+            {{transacao.valorContabil ? (transacao.valorContabil | currency) : '-'}}
+        </td>
+        <td mat-footer-cell *matFooterCellDef>{{custoContabil | currency}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="acoes">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let transacao">
+            <button mat-icon-button color="warn" (click)="removeTransacao(transacao)">
+                <mat-icon>delete</mat-icon>
+            </button>
+        </td>
+        <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="colunas"></tr>
+    <tr mat-row *matRowDef="let transacao; columns: colunas"></tr>
+    <tr mat-footer-row *matFooterRowDef="colunas"></tr>
+</table>
+

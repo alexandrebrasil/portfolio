@@ -1,0 +1,48 @@
+<div class="mat-subheading-2">Novo evento</div>
+<form [formGroup]="novoEvento">
+    <mat-form-field>
+        <mat-label>Evento</mat-label>
+        <mat-select formControlName="tipo" #tipoEvento>
+            <mat-option value="compra">Compra</mat-option>
+            <mat-option value="venda">Venda</mat-option>
+            <mat-option value="dividendos">Dividendos</mat-option>
+            <mat-option value="jcp">Pagamento de JCP</mat-option>
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Data Ex</mat-label>
+        <input matInput [matDatepicker]="pickerEx" formControlName="dataEx">
+        <mat-datepicker-toggle matSuffix [for]="pickerEx"></mat-datepicker-toggle>
+        <mat-datepicker #pickerEx></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Data</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="data">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>
+            <ng-container *ngIf="tipoEvento.value === 'jcp' || tipoEvento.value === 'dividendos'; else preco">
+                Valor
+            </ng-container>
+            <ng-template #preco>Preço</ng-template>
+            unitário (R$)
+        </mat-label>
+        <input matInput type="number" formControlName="valor">
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Quantidade</mat-label>
+        <input matInput type="number" formControlName="quantidade">
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Taxas (R$)</mat-label>
+        <input matInput type="number" formControlName="taxas">
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Total (R$)</mat-label>
+        <input matInput type="number" formControlName="valorTotal">
+    </mat-form-field>
+</form>
+
+<button mat-raised-button color="primary" [disabled]="!novoEvento.valid" (click)="gravaNovoEvento()">Salvar</button>

@@ -1,0 +1,19 @@
+:host {
+    display: block;
+}
+
+form {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+
+    input[type=number] {
+        text-align: right;
+
+        &::-webkit-outer-spin-button,
+        &::-webkit-inner-spin-button {
+            display: none;
+        }
+    }
+}
+
