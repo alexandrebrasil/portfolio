@@ -40,8 +40,9 @@ export class LedgerComponent implements OnChanges {
     }
 
     carregaTransacoes(){
-        from(this.db.eventos.where('ativo').equals(this.ativo.ticker).sortBy('data'))
+        from(this.db.eventos.where('ativo').equals(this.ativo.ticker).toArray())
             .pipe(
+                map(transacoes => transacoes.sort(ordenacaoTransacoes)),
                 map(transacoes => transacoes.map(transacao => ({
                         ... transacao,
                         valorFinanceiro: 0,
@@ -90,6 +91,24 @@ interface TransacaoExtendida extends Evento {
     quantidadeTransacao: number;
 }
 
+function ordenacaoTransacoes(t1: Evento, t2: Evento) {
+    if(t1.data !== t2.data) {
+        return t1.data.localeCompare(t2.data);
+    } 
+
+    return ordemTipo(t1.tipo) - ordemTipo(t2.tipo);
+}
+
+function ordemTipo(tipo: TipoEvento) {
+    if(tipo === 'compra' || tipo === 'venda') {
+        return 0;
+    } else if(tipo === 'bonificação' || tipo === 'desdobramento' || tipo === 'grupamento') {
+        return 1;
+    }
+
+    return 2;
+}
+
 function quantidade(transacao: Evento, quantidadeAcumulada: number): number {
     switch(transacao.tipo) {
         case "compra": 
@@ -97,9 +116,9 @@ function quantidade(transacao: Evento, quantidadeAcumulada: number): number {
         case "venda":
             return -(transacao.quantidade || 0);
         case "bonificação":
-            return quantidadeAcumulada * (transacao.multiplicador || 0) / 100;
+            return Math.floor(quantidadeAcumulada * (transacao.multiplicador || 0) / 100);
         case "desdobramento":
-            return quantidadeAcumulada * ((transacao.multiplicador || 0) - 1);
+            return Math.floor(quantidadeAcumulada * ((transacao.multiplicador || 0) - 1));
         default:
             return 0;
     }
