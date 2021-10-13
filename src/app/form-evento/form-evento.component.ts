@@ -50,6 +50,8 @@ export class FormEventoComponent {
                 this.configuraBonificacao();
             } else if(v.tipo === 'desdobramento') {
                 this.configuraDesdobramento();
+            } else if(v.tipo === 'grupamento') {
+                this.configuraGrupamento();
             }
         });
 
@@ -136,13 +138,8 @@ export class FormEventoComponent {
         controls.dataEx.disable({emitEvent: false});
         controls.multiplicador.enable({emitEvent: false});
 
-        let valor = this.novoEvento.value.valor;
-
         this.tituloMultiplicador = 'Percentual bonificado';
         this.tituloValor = 'Preço contábil (R$)';
-
-        this.novoEvento.controls.taxas.setValue(0, {emitEvent: false});
-        this.novoEvento.controls.valorTotal.setValue(valor, {emitEvent: false});
     }
 
     private configuraDesdobramento() {
@@ -154,12 +151,19 @@ export class FormEventoComponent {
         controls.multiplicador.enable({emitEvent: false});
         controls.valor.disable({emitEvent: false})
 
-        let valor = this.novoEvento.value.valor;
-
         this.tituloMultiplicador = 'Multiplicador (1:X)';
+    }
 
-        this.novoEvento.controls.taxas.setValue(0, {emitEvent: false});
-        this.novoEvento.controls.valorTotal.setValue(valor, {emitEvent: false});
+    private configuraGrupamento() {
+        let controls = this.novoEvento.controls;
+
+        controls.quantidade.disable({emitEvent: false});
+        controls.taxas.disable({emitEvent: false});
+        controls.dataEx.disable({emitEvent: false});
+        controls.multiplicador.enable({emitEvent: false});
+        controls.valor.disable({emitEvent: false})
+
+        this.tituloMultiplicador = 'Multiplicador (X:1)';
     }
 
     async gravaNovoEvento() {

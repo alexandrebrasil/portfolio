@@ -119,6 +119,8 @@ function quantidade(transacao: Evento, quantidadeAcumulada: number): number {
             return Math.floor(quantidadeAcumulada * (transacao.multiplicador || 0) / 100);
         case "desdobramento":
             return Math.floor(quantidadeAcumulada * ((transacao.multiplicador || 0) - 1));
+        case "grupamento":
+            return - Math.ceil(quantidadeAcumulada * (1 - 1 / (transacao.multiplicador || 1)));
         default:
             return 0;
     }
