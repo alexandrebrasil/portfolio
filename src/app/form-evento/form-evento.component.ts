@@ -63,6 +63,7 @@ export class FormEventoComponent {
         
         controls.quantidade.enable({emitEvent: false});
         controls.taxas.enable({emitEvent: false});
+        controls.valor.enable({emitEvent: false})
         controls.dataEx.disable({emitEvent: false});
         controls.multiplicador.disable({emitEvent: false});
 
@@ -81,6 +82,7 @@ export class FormEventoComponent {
         
         controls.quantidade.enable({emitEvent: false});
         controls.taxas.enable({emitEvent: false});
+        controls.valor.enable({emitEvent: false})
         controls.dataEx.disable({emitEvent: false});
         controls.multiplicador.disable({emitEvent: false});
 
@@ -99,6 +101,7 @@ export class FormEventoComponent {
         
         controls.quantidade.disable({emitEvent: false});
         controls.taxas.disable({emitEvent: false});
+        controls.valor.enable({emitEvent: false})
         controls.dataEx.enable({emitEvent: false});
         controls.multiplicador.disable({emitEvent: false});
 
@@ -119,6 +122,7 @@ export class FormEventoComponent {
 
         controls.quantidade.disable({emitEvent: false});
         controls.taxas.disable({emitEvent: false});
+        controls.valor.enable({emitEvent: false})
         controls.dataEx.enable({emitEvent: false});
         controls.multiplicador.disable({emitEvent: false});
 
@@ -135,6 +139,7 @@ export class FormEventoComponent {
 
         controls.quantidade.disable({emitEvent: false});
         controls.taxas.disable({emitEvent: false});
+        controls.valor.disable({emitEvent: false})
         controls.dataEx.disable({emitEvent: false});
         controls.multiplicador.enable({emitEvent: false});
 
@@ -177,7 +182,7 @@ export class FormEventoComponent {
 
         await this.db.eventos.add(evento);
         
-        this.novoEvento.reset({tipo: dados.tipo, data: dados.data});
+        this.novoEvento.reset({tipo: dados.tipo, data: dados.data, dataEx: dados.dataEx});
         this.onNovoEvento.emit()
     }
 
