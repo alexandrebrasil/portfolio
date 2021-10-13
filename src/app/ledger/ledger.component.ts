@@ -1,10 +1,8 @@
-import { Component, Input, OnChanges, SimpleChanges } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { Component, EventEmitter, Input, OnChanges, Output } from "@angular/core";
 import { from } from "rxjs";
 import { map, tap } from "rxjs/operators";
-import { Ativo, Evento, PortfolioDb, TipoEvento } from "../db";
+import { Ativo, Evento, PortfolioDb, TipoEvento, TransacaoExtendida } from "../db";
 
-import * as moment from 'moment';
 
 @Component({
     selector: 'portfolio-ledger',
@@ -14,141 +12,30 @@ import * as moment from 'moment';
 export class LedgerComponent implements OnChanges {
     colunas = ['data', 'tipo', 'unitario', 'quantidade', 'valorFinanceiro', 'valorContabil', 'acoes'];
 
-    transacoes: TransacaoExtendida[];
     custoContabil: number;
     custoLiquido: number;
     quantidadeAtual: number;
 
-
     @Input()
-    ativo: Ativo;
+    transacoes: TransacaoExtendida[];
 
-    constructor(private db: PortfolioDb) {
-        
+    @Output()
+    onDeleteTransacao = new EventEmitter<TransacaoExtendida>()
+
+    ngOnChanges() {
+        const ultimaTransacao = this.transacoes?.[this.transacoes?.length - 1];
+
+        this.custoContabil = ultimaTransacao?.valorContabilAcumulado || 0;
+        this.custoLiquido = ultimaTransacao?.valorFinanceiroAcumulado || 0;
+        this.quantidadeAtual = ultimaTransacao?.quantidadeAcumulada || 0;
     }
 
-    ngOnChanges(changes: SimpleChanges) {
-        this.carregaTransacoes();
-    }
 
-
-    async removeTransacao(transacao: Evento) {
-        if(transacao.id){
-            await this.db.eventos.delete(transacao.id);
-            this.carregaTransacoes();
+    removeTransacao(transacao: TransacaoExtendida) {
+        if(window.confirm(`Deseja prosseguir com a exclusão de ${transacao.tipo} de ${transacao.data}?`)){
+            this.onDeleteTransacao.emit(transacao);
         }
     }
-
-    carregaTransacoes(){
-        from(this.db.eventos.where('ativo').equals(this.ativo.ticker).toArray())
-            .pipe(
-                map(transacoes => transacoes.sort(ordenacaoTransacoes)),
-                map(transacoes => transacoes.map(transacao => ({
-                        ... transacao,
-                        valorFinanceiro: 0,
-                        valorFinanceiroAcumulado: 0,
-                        valorContabil: 0,
-                        valorContabilAcumulado: 0,
-                        quantidadeAcumulada: 0,
-                        quantidadeTransacao: 0
-                    })
-                )),
-                tap(transacoes => transacoes.reduce((prev, curr) => {
-                    curr.quantidadeTransacao = quantidade(curr, prev.quantidadeAcumulada);
-                    curr.quantidadeAcumulada = prev.quantidadeAcumulada + curr.quantidadeTransacao;
-                    return curr;
-                }, transacoes[0])),
-                tap(transacoes => transacoes.reduce((prev, curr) => {
-                    let financeiro = valorFinanceiro(curr),
-                        contabil = valorContabil(curr);
-
-                    curr.valorContabil = contabil;
-                    curr.valorFinanceiro = financeiro;
-                    curr.valorContabilAcumulado = prev.valorContabilAcumulado + contabil;
-                    curr.valorFinanceiroAcumulado = prev.valorFinanceiroAcumulado + financeiro;
-
-                    return curr;
-                }, transacoes[0]))
-            )
-            .subscribe(transacoes => {
-                this.transacoes = transacoes;
-                
-                const ultimaTransacao = transacoes[transacoes.length - 1];
-                this.custoContabil = ultimaTransacao?.valorContabilAcumulado || 0;
-                this.custoLiquido = ultimaTransacao?.valorFinanceiroAcumulado || 0;
-                this.quantidadeAtual = ultimaTransacao?.quantidadeAcumulada || 0;
-            });
-    }
 }
 
-interface TransacaoExtendida extends Evento {
-    valorFinanceiro: number;
-    valorContabil: number;
 
-    valorFinanceiroAcumulado: number;
-    valorContabilAcumulado: number;
-    quantidadeAcumulada: number;
-    quantidadeTransacao: number;
-}
-
-function ordenacaoTransacoes(t1: Evento, t2: Evento) {
-    if(t1.data !== t2.data) {
-        return t1.data.localeCompare(t2.data);
-    } 
-
-    return ordemTipo(t1.tipo) - ordemTipo(t2.tipo);
-}
-
-function ordemTipo(tipo: TipoEvento) {
-    if(tipo === 'compra' || tipo === 'venda') {
-        return 0;
-    } else if(tipo === 'bonificação' || tipo === 'desdobramento' || tipo === 'grupamento') {
-        return 1;
-    }
-
-    return 2;
-}
-
-function quantidade(transacao: Evento, quantidadeAcumulada: number): number {
-    switch(transacao.tipo) {
-        case "compra": 
-            return (transacao.quantidade || 0);
-        case "venda":
-            return -(transacao.quantidade || 0);
-        case "bonificação":
-            return Math.floor(quantidadeAcumulada * (transacao.multiplicador || 0) / 100);
-        case "desdobramento":
-            return Math.floor(quantidadeAcumulada * ((transacao.multiplicador || 0) - 1));
-        case "grupamento":
-            return - Math.ceil(quantidadeAcumulada * (1 - 1 / (transacao.multiplicador || 1)));
-        default:
-            return 0;
-    }
-}
-
-function valorFinanceiro(transacao: TransacaoExtendida): number {
-    switch(transacao.tipo) {
-        case "compra": 
-            return - ((transacao.quantidade || 0) * (transacao.valor || 0) + (transacao.taxas || 0));
-        case "venda":
-            return (transacao.quantidade || 0) * (transacao.valor || 0) - (transacao.taxas || 0);
-        case "dividendos":
-            return (transacao.valor || 0) * transacao.quantidadeAcumulada;
-        case "jcp":
-            return (transacao.valor || 0) * 0.85 * transacao.quantidadeAcumulada;
-        default:
-            return 0;
-    }
-}
-
-function valorContabil(transacao: TransacaoExtendida): number {
-    switch(transacao.tipo) {
-        case "compra": 
-        case "venda":
-            return valorFinanceiro(transacao);
-        case "bonificação":
-            return -(transacao.valor || 0) * transacao.quantidadeTransacao;
-        default:
-            return 0;
-    }   
-}

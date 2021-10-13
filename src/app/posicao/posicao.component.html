@@ -1,3 +1,10 @@
-<div class="mat-headline">Posição atual</div>
-<portfolio-form-evento [ativo]="ativo" (onNovoEvento)="ledger.carregaTransacoes()"></portfolio-form-evento>
-<portfolio-ledger [ativo]="ativo" #ledger></portfolio-ledger>
+
+<mat-tab-group>
+    <mat-tab label="Posição atual">
+        <div class="mat-headline">Posição atual</div>
+    </mat-tab>
+    <mat-tab label="Histórico de eventos">
+        <portfolio-form-evento [ativo]="ativo" (onNovoEvento)="carregaTransacoes()"></portfolio-form-evento>
+        <portfolio-ledger [transacoes]="transacoes" (onDeleteTransacao)="removeTransacao($event)"></portfolio-ledger>
+    </mat-tab>
+</mat-tab-group>
