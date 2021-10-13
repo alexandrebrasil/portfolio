@@ -8,6 +8,7 @@
             <mat-option value="dividendos">Dividendos</mat-option>
             <mat-option value="jcp">Pagamento de JCP</mat-option>
             <mat-option value="bonificação">Bonificação</mat-option>
+            <mat-option value="desdobramento">Desdobramento</mat-option>
         </mat-select>
     </mat-form-field>
     <mat-form-field class="ocultavel">
@@ -30,7 +31,7 @@
         <mat-label>{{ tituloMultiplicador }}</mat-label>
         <input matInput type="number" formControlName="multiplicador">
     </mat-form-field>
-    <mat-form-field>
+    <mat-form-field class="ocultavel">
         <mat-label>{{ tituloValor }}</mat-label>
         <input matInput type="number" formControlName="valor">
     </mat-form-field>

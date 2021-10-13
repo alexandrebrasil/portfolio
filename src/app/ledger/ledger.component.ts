@@ -98,6 +98,8 @@ function quantidade(transacao: Evento, quantidadeAcumulada: number): number {
             return -(transacao.quantidade || 0);
         case "bonificação":
             return quantidadeAcumulada * (transacao.multiplicador || 0) / 100;
+        case "desdobramento":
+            return quantidadeAcumulada * ((transacao.multiplicador || 0) - 1);
         default:
             return 0;
     }

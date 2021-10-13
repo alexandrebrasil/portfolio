@@ -48,6 +48,8 @@ export class FormEventoComponent {
                 this.configuraDividendos();
             } else if(v.tipo === 'bonificação') {
                 this.configuraBonificacao();
+            } else if(v.tipo === 'desdobramento') {
+                this.configuraDesdobramento();
             }
         });
 
@@ -131,13 +133,30 @@ export class FormEventoComponent {
 
         controls.quantidade.disable({emitEvent: false});
         controls.taxas.disable({emitEvent: false});
-        controls.dataEx.enable({emitEvent: false});
+        controls.dataEx.disable({emitEvent: false});
         controls.multiplicador.enable({emitEvent: false});
 
         let valor = this.novoEvento.value.valor;
 
         this.tituloMultiplicador = 'Percentual bonificado';
         this.tituloValor = 'Preço contábil (R$)';
+
+        this.novoEvento.controls.taxas.setValue(0, {emitEvent: false});
+        this.novoEvento.controls.valorTotal.setValue(valor, {emitEvent: false});
+    }
+
+    private configuraDesdobramento() {
+        let controls = this.novoEvento.controls;
+
+        controls.quantidade.disable({emitEvent: false});
+        controls.taxas.disable({emitEvent: false});
+        controls.dataEx.disable({emitEvent: false});
+        controls.multiplicador.enable({emitEvent: false});
+        controls.valor.disable({emitEvent: false})
+
+        let valor = this.novoEvento.value.valor;
+
+        this.tituloMultiplicador = 'Multiplicador (1:X)';
 
         this.novoEvento.controls.taxas.setValue(0, {emitEvent: false});
         this.novoEvento.controls.valorTotal.setValue(valor, {emitEvent: false});
