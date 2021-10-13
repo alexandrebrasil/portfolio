@@ -135,7 +135,7 @@ function valorFinanceiro(transacao: TransacaoExtendida): number {
         case "dividendos":
             return (transacao.valor || 0) * transacao.quantidadeAcumulada;
         case "jcp":
-            return ((transacao.valor || 0) - (transacao.taxas || 0)) * transacao.quantidadeAcumulada;
+            return (transacao.valor || 0) * 0.85 * transacao.quantidadeAcumulada;
         default:
             return 0;
     }
