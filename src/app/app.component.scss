@@ -2,15 +2,16 @@
 @use '~@angular/material' as mat;
 
 :host {
-    height: 100%;
-    padding: 32px;
+    display: block;
 
-    display: grid;
-    grid-template-columns: 180px 1fr;
-    gap: 16px;
+    padding: 32px 32px 32px 228px;
 }
 
 .sidebar {
+    position: fixed;
+    left: 32px;
+    top: 32px;
+    width: 180px;
     padding: 4px 16px;
 
     display: flex;
