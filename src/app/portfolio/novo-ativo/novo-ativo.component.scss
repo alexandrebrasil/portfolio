@@ -1,0 +1,23 @@
+form {
+    display: grid;
+    gap: 16px;
+
+    grid-template-areas: "empresa empresa empresa"
+                         "ticker tipo preco-mercado";
+
+    .empresa {
+        grid-area: empresa;
+    }
+
+    .tipo {
+        grid-area: tipo;
+    }
+
+    .ticker {
+        grid-area: ticker;
+    }
+
+    .preco {
+        grid-area: preco-mercado;
+    }
+}

@@ -1,9 +1,9 @@
-<button mat-mini-fab (click)="novaPosicao()" matTooltip="Nova posição">
+<button mat-mini-fab (click)="novoAtivo()" matTooltip="Novo ativo">
     <mat-icon>add</mat-icon>
 </button>
 
 <mat-accordion>
-    <mat-expansion-panel *ngFor="let ativo of posicao$ | async">
+    <mat-expansion-panel *ngFor="let ativo of posicao$ | async; first as first" [expanded]="first">
         <mat-expansion-panel-header>
             <mat-panel-title>{{ativo.ticker}}</mat-panel-title>
             <mat-panel-description>{{ativo.empresa}}</mat-panel-description>

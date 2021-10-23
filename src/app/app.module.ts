@@ -9,6 +9,7 @@ import { PortfolioComponent } from './portfolio/portfolio.component';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion'
 import { MatFormFieldModule, MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field'
 import { MatIconModule } from '@angular/material/icon';
@@ -28,6 +29,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { PosicaoComponent } from './posicao/posicao.component';
 import { FormEventoComponent } from './form-evento/form-evento.component';
+import { NovoAtivoDialog } from './portfolio/novo-ativo/novo-ativo.component';
 
 registerLocaleData(localePt);
 
@@ -38,6 +40,7 @@ registerLocaleData(localePt);
         PortfolioComponent,
         PosicaoComponent,
         LedgerComponent,
+        NovoAtivoDialog,
         
         TipoEventoPipe
     ],
@@ -55,6 +58,7 @@ registerLocaleData(localePt);
     
         MatButtonModule,
         MatDatepickerModule,
+        MatDialogModule,
         MatExpansionModule,
         MatFormFieldModule,
         MatIconModule,

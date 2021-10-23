@@ -1,7 +1,9 @@
 import { Component } from "@angular/core";
+import { MatDialog } from "@angular/material/dialog";
 import { from, Observable } from "rxjs";
 
 import { Ativo, PortfolioDb } from "../db";
+import { NovoAtivoDialog } from "./novo-ativo/novo-ativo.component";
 
 @Component({
     templateUrl: './portfolio.component.html',
@@ -10,23 +12,23 @@ import { Ativo, PortfolioDb } from "../db";
 export class PortfolioComponent {
     posicao$: Observable<Ativo[]>;
 
-    constructor(private db: PortfolioDb) {
-        this.posicao$ = from(db.ativos.orderBy('ticker').toArray());
+    constructor(private db: PortfolioDb, private dialog: MatDialog) {
+        this.atualizaPosicao();
     }
 
-    async novaPosicao() {
-        let idAtivo = await this.db.ativos.put({
-            ticker: 'ITUB4',
-            empresa: 'Itaú'
-        });
+    atualizaPosicao() {
+        this.posicao$ = from(this.db.ativos.orderBy('ticker').toArray());
+    }
 
-        await this.db.eventos.put({
-            ativo: idAtivo,
-            tipo: 'compra',
-            quantidade: 1000,
-            valor: 34.56,
-            data: '2021-03-01',
-            taxas: 11.23
-        });
+    async novoAtivo() {
+        this.dialog
+            .open<NovoAtivoDialog, Ativo, Ativo>(NovoAtivoDialog, { disableClose: true, hasBackdrop: true })
+            .afterClosed()
+            .subscribe(ativo => {
+                if(ativo) {
+                    this.db.ativos.put({... ativo, ticker: ativo.ticker.toUpperCase()}, ativo.ticker)
+                        .then(_ => this.atualizaPosicao());
+                }
+            });
     }
 }
