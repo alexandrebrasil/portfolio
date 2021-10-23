@@ -1,1 +1,39 @@
+@use 'theme';
+@use '~@angular/material' as mat;
 
+:host {
+    display: block;
+}
+
+.container {
+    padding: 8px 0px;
+
+    .posicao-atual {
+        align-self: flex-start;
+
+        display: grid;
+        gap: 16px;
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+}
+
+.operacoes-fechadas {
+    .mat-column-quantidade,
+    .mat-column-resultadoFinanceiro,
+    .mat-column-resultadoContabil {
+        text-align: right;
+        justify-content: flex-end;
+    }
+
+    .mat-footer-cell {
+        font-weight: 500;
+    }
+}
+
+.prejuizo {
+    color: mat.get-color-from-palette(theme.$portfolio-warn, "default");
+}
+
+.lucro {
+    color: mat.get-color-from-palette(theme.$portfolio-primary, "default");
+}

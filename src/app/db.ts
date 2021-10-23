@@ -97,7 +97,8 @@ export class PortfolioDb extends Dexie {
 export interface Ativo {
     ticker: string
     empresa: string
-    tipo: 'ação' | 'fundo-imobiliario'
+    tipo: 'ação' | 'fundo-imobiliario',
+    precoMercado: number
 }
 
 export type TipoEvento = 'compra' | 'venda' | 'jcp' | 'dividendos' | 'bonificação' | 'grupamento' | 'desdobramento';

@@ -1,7 +1,81 @@
 
 <mat-tab-group>
     <mat-tab label="Posição atual">
-        <div class="mat-headline">Posição atual</div>
+        <div class="container">
+            <div class="posicao-atual">
+                <div>
+                    <label>Quantidade</label>
+                    <div>{{quantidadeAtual | number}}</div>
+                </div>
+                <div>
+                    <label>Preço mercado</label>
+                    <div>{{ativo.precoMercado || 0 | currency}}</div>
+                </div>
+                <div>
+                    <label>Valor de marcado</label>
+                    <div>{{ativo.precoMercado * quantidadeAtual || 0 | currency}}</div>
+                </div>
+                
+                <div>
+                    <label>Preço médio</label>
+                    <div>{{precoMedio | currency}}</div>
+                </div>
+                <div>
+                    <label>Resultado</label>
+                    <div [class.prejuizo]="ativo.precoMercado * quantidadeAtual - quantidadeAtual * precoMedio < 0"
+                         [class.lucro]="ativo.precoMercado * quantidadeAtual - quantidadeAtual * precoMedio > 0">
+                        {{ativo.precoMercado * quantidadeAtual - quantidadeAtual * precoMedio | currency}}
+                    </div>
+                </div>
+                <div>
+                    <label>Posição (contábil)</label>
+                    <div [class.prejuizo]="ativo.precoMercado * quantidadeAtual - custoContabil < 0"
+                         [class.lucro]="ativo.precoMercado * quantidadeAtual - custoContabil > 0">
+                        {{ativo.precoMercado * quantidadeAtual - custoContabil | currency}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </mat-tab>
+    <mat-tab label="Operações fechadas" *ngIf="operacoesFechadas?.length">
+        <mat-table [dataSource]="operacoesFechadas" class="operacoes-fechadas">
+            <ng-container matColumnDef="data">
+                <mat-header-cell *matHeaderCellDef>Data</mat-header-cell>
+                <mat-cell *matCellDef="let operacao">
+                    {{operacao.data | date:'shortDate'}}
+                </mat-cell>
+                <mat-footer-cell *matFooterCellDef>Total</mat-footer-cell>
+            </ng-container>
+            <ng-container matColumnDef="quantidade">
+                <mat-header-cell *matHeaderCellDef>Quantidade</mat-header-cell>
+                <mat-cell *matCellDef="let operacao">
+                    {{operacao.quantidade | number}}
+                </mat-cell>
+                <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+            </ng-container>
+            <ng-container matColumnDef="resultadoFinanceiro">
+                <mat-header-cell *matHeaderCellDef>Resultado</mat-header-cell>
+                <mat-cell *matCellDef="let operacao"  [class]="{prejuizo: operacao.resultadoFinanceiro < 0, lucro: operacao.resultadoFinanceiro > 0}">
+                    {{operacao.resultadoFinanceiro | currency}}
+                </mat-cell>
+                <mat-footer-cell *matFooterCellDef [class]="{prejuizo: resultadoFinanceiroAcumulado < 0, lucro: resultadoFinanceiroAcumulado > 0}">
+                    {{ resultadoFinanceiroAcumulado | currency }}
+                </mat-footer-cell>
+            </ng-container>
+            <ng-container matColumnDef="resultadoContabil">
+                <mat-header-cell *matHeaderCellDef>Resultado contábil</mat-header-cell>
+                <mat-cell *matCellDef="let operacao" [class]="{prejuizo: operacao.resultadoContabil < 0, lucro: operacao.resultadoContabil > 0}">
+                    {{operacao.resultadoContabil | currency}}
+                </mat-cell>
+                <mat-footer-cell *matFooterCellDef [class]="{prejuizo: resultadoContabilAcumulado < 0, lucro: resultadoContabilAcumulado > 0}">
+                    {{ resultadoContabilAcumulado | currency }}
+                </mat-footer-cell>
+            </ng-container>
+            
+            <mat-header-row *matHeaderRowDef="colunas; sticky: true"></mat-header-row>
+            <mat-row *matRowDef="let transacao; columns: colunas"></mat-row>
+            <mat-footer-row *matFooterRowDef="colunas; sticky: true"></mat-footer-row>
+        </mat-table>
     </mat-tab>
     <mat-tab label="Histórico de eventos">
         <portfolio-form-evento [ativo]="ativo" (onNovoEvento)="carregaTransacoes()"></portfolio-form-evento>
