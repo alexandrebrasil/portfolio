@@ -37,7 +37,8 @@ export class PortfolioDb extends Dexie {
                         valorContabilAcumulado: 0,
                         quantidadeAcumulada: 0,
                         quantidadeTransacao: 0,
-                        precoMedio: 0
+                        precoMedio: 0,
+                        precoMedioFinanceiro: 0
                     })
                 )),
                 tap(transacoes => transacoes.reduce((prev, curr) => {
@@ -54,6 +55,7 @@ export class PortfolioDb extends Dexie {
 
                     return curr;
                 }, transacoes[0])),
+                // Cálculo do preço médio contábil
                 tap(transacoes => transacoes.reduce((contabilAcumulado, tx) => {
                     if(tx.quantidadeAcumulada == 0) {
                         tx.precoMedio = 0;
@@ -73,6 +75,24 @@ export class PortfolioDb extends Dexie {
                     }
 
                     return contabilAcumulado;
+                }, 0)),
+                // Cálculo do preço médio financeiro
+                tap(transacoes => transacoes.reduce((precoMedioAnterior, tx) => {
+                    if(tx.quantidadeAcumulada == 0) {
+                        tx.precoMedioFinanceiro = 0;
+                        return 0;
+                    }
+
+                    if(tx.tipo !== 'venda') {
+                        let quantidadePrevia = tx.quantidadeAcumulada - tx.quantidadeTransacao,
+                            financeiroPrevio = quantidadePrevia * precoMedioAnterior;
+
+                        precoMedioAnterior = Math.abs((financeiroPrevio - tx.valorFinanceiro) / tx.quantidadeAcumulada);
+                    }
+
+                    tx.precoMedioFinanceiro = precoMedioAnterior;
+
+                    return precoMedioAnterior;
                 }, 0))
             );
     }
@@ -108,6 +128,7 @@ export interface TransacaoExtendida extends Evento {
     quantidadeTransacao: number;
 
     precoMedio: number;
+    precoMedioFinanceiro: number;
 }
 
 
