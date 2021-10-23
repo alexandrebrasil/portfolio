@@ -32,6 +32,7 @@
         </mat-cell>
         <mat-footer-cell *matFooterCellDef>{{quantidadeAtual | number}}</mat-footer-cell>
     </ng-container>
+
     <ng-container matColumnDef="valorFinanceiro">
         <mat-header-cell *matHeaderCellDef>Valor financeiro</mat-header-cell>
         <mat-cell *matCellDef="let transacao">
@@ -39,16 +40,19 @@
         </mat-cell>
         <mat-footer-cell *matFooterCellDef>{{custoLiquido | currency}}</mat-footer-cell>
     </ng-container>
-    <ng-container matColumnDef="valorContabil">
-        <mat-header-cell *matHeaderCellDef>Valor contabil</mat-header-cell>
+
+    <ng-container matColumnDef="resultadoFinanceiro">
+        <mat-header-cell *matHeaderCellDef>Resultado<br/>(financeiro)</mat-header-cell>
         <mat-cell *matCellDef="let transacao">
-            {{transacao.valorContabil ? (transacao.valorContabil | currency) : '-'}}
+            <ng-container *ngIf="transacao.tipo === 'venda'">
+                {{(transacao.valorFinanceiro - transacao.precoMedioFinanceiro * transacao.quantidade) | currency}}
+            </ng-container>
         </mat-cell>
-        <mat-footer-cell *matFooterCellDef>{{custoContabil | currency}}</mat-footer-cell>
+        <mat-footer-cell *matFooterCellDef>{{resultadoFinanceiroAcumulado | currency}}</mat-footer-cell>
     </ng-container>
 
     <ng-container matColumnDef="resultado">
-        <mat-header-cell *matHeaderCellDef>Resultado</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef>Resultado<br/>(contábil)</mat-header-cell>
         <mat-cell *matCellDef="let transacao">
             <ng-container *ngIf="transacao.tipo === 'venda'">
                 {{(transacao.valorContabil - transacao.precoMedio * transacao.quantidade) | currency}}

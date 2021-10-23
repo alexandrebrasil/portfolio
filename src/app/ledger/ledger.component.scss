@@ -11,11 +11,13 @@ mat-table {
     overflow: auto;
 
     .mat-column-valorFinanceiro,
-    .mat-column-valorContabil,
     .mat-column-unitario,
+    .mat-column-resultadoFinanceiro,
     .mat-column-resultado,
+    .mat-column-pf,
     .mat-column-quantidade {
         justify-content: flex-end;
+        text-align: right;
     }
 
     .mat-column-acoes {

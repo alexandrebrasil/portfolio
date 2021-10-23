@@ -1,7 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, Output } from "@angular/core";
-import { from } from "rxjs";
-import { map, tap } from "rxjs/operators";
-import { Ativo, Evento, PortfolioDb, TipoEvento, TransacaoExtendida } from "../db";
+import { TransacaoExtendida } from "../db";
 
 
 @Component({
@@ -10,9 +8,9 @@ import { Ativo, Evento, PortfolioDb, TipoEvento, TransacaoExtendida } from "../d
     styleUrls: [ './ledger.component.scss' ]
 })
 export class LedgerComponent implements OnChanges {
-    colunas = ['data', 'tipo', 'unitario', 'quantidade', 'valorFinanceiro', 'valorContabil', 'resultado', 'acoes'];
+    colunas = ['data', 'tipo', 'unitario', 'quantidade', 'valorFinanceiro', 'resultadoFinanceiro', 'resultado', 'acoes'];
 
-    custoContabil: number;
+    resultadoFinanceiroAcumulado: number;
     custoLiquido: number;
     quantidadeAtual: number;
     resultadoAcumulado: number;
@@ -26,10 +24,10 @@ export class LedgerComponent implements OnChanges {
     ngOnChanges() {
         const ultimaTransacao = this.transacoes?.[this.transacoes?.length - 1];
 
-        this.custoContabil = (-ultimaTransacao?.quantidadeAcumulada * ultimaTransacao?.precoMedio) || 0;
-        this.custoLiquido = ultimaTransacao?.valorFinanceiroAcumulado || 0;
+        this.custoLiquido = -ultimaTransacao?.quantidadeAcumulada * ultimaTransacao?.precoMedioFinanceiro || 0;
         this.quantidadeAtual = ultimaTransacao?.quantidadeAcumulada || 0;
-
+        
+        this.resultadoFinanceiroAcumulado = this.transacoes?.filter(tx => tx.tipo === 'venda').map(tx => tx.valorFinanceiro - tx.precoMedioFinanceiro * (tx.quantidade || 0)).reduce((r1, r2) => r1 + r2, 0);
         this.resultadoAcumulado = this.transacoes?.filter(tx => tx.tipo === 'venda').map(tx => tx.valorContabil - tx.precoMedio * (tx.quantidade || 0)).reduce((r1, r2) => r1 + r2, 0);
     }
 
