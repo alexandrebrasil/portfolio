@@ -1,6 +1,5 @@
-import { ifStmt } from "@angular/compiler/src/output/output_ast";
 import Dexie from "dexie";
-import { from, Observable, of } from "rxjs";
+import { from, Observable } from "rxjs";
 import { map, tap } from "rxjs/operators";
 
 export class PortfolioDb extends Dexie {
@@ -56,30 +55,27 @@ export class PortfolioDb extends Dexie {
                     return curr;
                 }, transacoes[0])),
                 // Cálculo do preço médio contábil
-                tap(transacoes => transacoes.reduce((contabilAcumulado, tx) => {
+                tap(transacoes => transacoes.reduce((precoMedioAnterior, tx) => {
                     if(tx.quantidadeAcumulada == 0) {
-                        tx.precoMedio = 0;
+                        tx.precoMedio = precoMedioAnterior;
                         return 0;
                     }
 
-                    if(tx.tipo === 'venda') {
+                    if(tx.tipo !== 'venda') {
                         let quantidadePrevia = tx.quantidadeAcumulada - tx.quantidadeTransacao,
-                            contabilPrevio = tx.valorContabilAcumulado - tx.valorContabil;
+                            contabilPrevio = quantidadePrevia * precoMedioAnterior;
 
-                        tx.precoMedio = Math.abs(contabilPrevio / quantidadePrevia);
-                        contabilAcumulado += tx.precoMedio * (tx.quantidadeAcumulada || 0);
-                    } else {
-                        contabilAcumulado += tx.valorContabil;
-
-                        tx.precoMedio = Math.abs(contabilAcumulado / tx.quantidadeAcumulada);
+                        precoMedioAnterior = Math.abs((contabilPrevio - tx.valorContabil) / tx.quantidadeAcumulada);
                     }
 
-                    return contabilAcumulado;
+                    tx.precoMedio = precoMedioAnterior;
+
+                    return precoMedioAnterior;
                 }, 0)),
                 // Cálculo do preço médio financeiro
                 tap(transacoes => transacoes.reduce((precoMedioAnterior, tx) => {
                     if(tx.quantidadeAcumulada == 0) {
-                        tx.precoMedioFinanceiro = 0;
+                        tx.precoMedioFinanceiro = precoMedioAnterior;
                         return 0;
                     }
 
