@@ -10,9 +10,9 @@ export class TipoEventoPipe implements PipeTransform {
             case "bonificação": return "Bonificação";
             case "compra": return 'Compra';
             case "desdobramento": return "Desdobramento";
-            case "dividendos": return "Pagamento de dividendos"
+            case "dividendos": return "Dividendos"
             case "grupamento": return "Grupamento";
-            case "jcp": return "Pagamento de JCP";
+            case "jcp": return "JCP";
             case "venda": return "Venda";
         }
 
