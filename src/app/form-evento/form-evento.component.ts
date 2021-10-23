@@ -139,7 +139,7 @@ export class FormEventoComponent {
 
         controls.quantidade.disable({emitEvent: false});
         controls.taxas.disable({emitEvent: false});
-        controls.valor.disable({emitEvent: false})
+        controls.valor.enable({emitEvent: false})
         controls.dataEx.disable({emitEvent: false});
         controls.multiplicador.enable({emitEvent: false});
 
