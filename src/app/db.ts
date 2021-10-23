@@ -1,3 +1,4 @@
+import { ifStmt } from "@angular/compiler/src/output/output_ast";
 import Dexie from "dexie";
 import { from, Observable, of } from "rxjs";
 import { map, tap } from "rxjs/operators";
@@ -8,10 +9,17 @@ export class PortfolioDb extends Dexie {
 
     constructor() {
         super('portfolio');
+        
         this.version(2).stores({
             eventos: 'id++,ativo,data',
             ativos: 'ticker'
         });
+
+        this.version(3).stores({
+            ativos: 'ticker,tipo'
+        }).upgrade(tx => {
+            return tx.table('ativos').toCollection().modify(ativo => ativo.tipo = 'ação')
+        })
 
         this.eventos = this.table('eventos');
         this.ativos = this.table('ativos');
@@ -28,7 +36,8 @@ export class PortfolioDb extends Dexie {
                         valorContabil: 0,
                         valorContabilAcumulado: 0,
                         quantidadeAcumulada: 0,
-                        quantidadeTransacao: 0
+                        quantidadeTransacao: 0,
+                        precoMedio: 0
                     })
                 )),
                 tap(transacoes => transacoes.reduce((prev, curr) => {
@@ -44,7 +53,27 @@ export class PortfolioDb extends Dexie {
                     curr.valorFinanceiroAcumulado = prev.valorFinanceiroAcumulado + financeiro;
 
                     return curr;
-                }, transacoes[0]))
+                }, transacoes[0])),
+                tap(transacoes => transacoes.reduce((contabilAcumulado, tx) => {
+                    if(tx.quantidadeAcumulada == 0) {
+                        tx.precoMedio = 0;
+                        return 0;
+                    }
+
+                    if(tx.tipo === 'venda') {
+                        let quantidadePrevia = tx.quantidadeAcumulada - tx.quantidadeTransacao,
+                            contabilPrevio = tx.valorContabilAcumulado - tx.valorContabil;
+
+                        tx.precoMedio = Math.abs(contabilPrevio / quantidadePrevia);
+                        contabilAcumulado += tx.precoMedio * (tx.quantidadeAcumulada || 0);
+                    } else {
+                        contabilAcumulado += tx.valorContabil;
+
+                        tx.precoMedio = Math.abs(contabilAcumulado / tx.quantidadeAcumulada);
+                    }
+
+                    return contabilAcumulado;
+                }, 0))
             );
     }
 }
@@ -77,6 +106,8 @@ export interface TransacaoExtendida extends Evento {
     valorContabilAcumulado: number;
     quantidadeAcumulada: number;
     quantidadeTransacao: number;
+
+    precoMedio: number;
 }
 
 

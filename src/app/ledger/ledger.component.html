@@ -4,7 +4,7 @@
         <mat-cell *matCellDef="let transacao">
             {{transacao.data | date:'shortDate'}}
         </mat-cell>
-        <mat-footer-cell *matFooterCellDef>Posição atual</mat-footer-cell>
+        <mat-footer-cell *matFooterCellDef></mat-footer-cell>
     </ng-container>
     <ng-container matColumnDef="tipo">
         <mat-header-cell *matHeaderCellDef>Tipo</mat-header-cell>
@@ -45,6 +45,16 @@
             {{transacao.valorContabil ? (transacao.valorContabil | currency) : '-'}}
         </mat-cell>
         <mat-footer-cell *matFooterCellDef>{{custoContabil | currency}}</mat-footer-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="resultado">
+        <mat-header-cell *matHeaderCellDef>Resultado</mat-header-cell>
+        <mat-cell *matCellDef="let transacao">
+            <ng-container *ngIf="transacao.tipo === 'venda'">
+                {{(transacao.valorContabil - transacao.precoMedio * transacao.quantidade) | currency}}
+            </ng-container>
+        </mat-cell>
+        <mat-footer-cell *matFooterCellDef>{{resultadoAcumulado | currency }}</mat-footer-cell>
     </ng-container>
 
     <ng-container matColumnDef="acoes">
