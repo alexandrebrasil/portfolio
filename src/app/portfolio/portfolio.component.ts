@@ -1,23 +1,26 @@
-import { Component } from "@angular/core";
+import { Component, EventEmitter } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
-import { from, Observable } from "rxjs";
-
 import { Ativo, PortfolioDb } from "../db";
 import { NovoAtivoDialog } from "./novo-ativo/novo-ativo.component";
+
 
 @Component({
     templateUrl: './portfolio.component.html',
     styleUrls: [ './portfolio.component.scss' ]
 })
 export class PortfolioComponent {
-    posicao$: Observable<Ativo[]>;
+    posicao$ = new EventEmitter<Ativo[]>();
 
     constructor(private db: PortfolioDb, private dialog: MatDialog) {
         this.atualizaPosicao();
     }
 
     atualizaPosicao() {
-        this.posicao$ = from(this.db.ativos.orderBy('ticker').toArray());
+        this.db.ativos.orderBy('ticker').toArray().then(txs => this.posicao$.emit(txs));
+    }
+
+    trackByAtivo(index: number, ativo: Ativo) {
+        return ativo.ticker;
     }
 
     async novoAtivo() {
