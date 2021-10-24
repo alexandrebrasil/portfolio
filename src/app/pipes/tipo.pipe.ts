@@ -14,6 +14,7 @@ export class TipoEventoPipe implements PipeTransform {
             case "grupamento": return "Grupamento";
             case "jcp": return "JCP";
             case "venda": return "Venda";
+            case "amortização": return "Amortização"
         }
 
         return value;

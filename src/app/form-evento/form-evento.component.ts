@@ -1,8 +1,7 @@
-import { ThrowStmt } from "@angular/compiler";
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import * as moment from 'moment';
-import { Ativo, PortfolioDb, TipoEvento } from "../db";
+import { Ativo, PortfolioDb } from "../db";
 
 
 @Component({
@@ -52,6 +51,8 @@ export class FormEventoComponent {
                 this.configuraDesdobramento();
             } else if(v.tipo === 'grupamento') {
                 this.configuraGrupamento();
+            } else if(v.tipo === 'amortização') {
+                this.configuraAmortizacao();
             }
         });
 
@@ -169,6 +170,23 @@ export class FormEventoComponent {
         controls.valor.disable({emitEvent: false})
 
         this.tituloMultiplicador = 'Multiplicador (X:1)';
+    }
+
+    private configuraAmortizacao() {
+        let controls = this.novoEvento.controls;
+
+        controls.quantidade.disable({emitEvent: false});
+        controls.taxas.disable({emitEvent: false});
+        controls.valor.enable({emitEvent: false})
+        controls.dataEx.enable({emitEvent: false});
+        controls.multiplicador.disable({emitEvent: false});
+
+        this.tituloValor = 'Amortização/cota (R$)';
+
+        let valor = this.novoEvento.value.valor;
+
+        controls.taxas.setValue(0, {emitEvent: false});
+        controls.valorTotal.setValue(valor, {emitEvent: false});
     }
 
     async gravaNovoEvento() {

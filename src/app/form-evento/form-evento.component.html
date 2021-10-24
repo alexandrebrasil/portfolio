@@ -10,6 +10,7 @@
             <mat-option value="bonificação">Bonificação</mat-option>
             <mat-option value="desdobramento">Desdobramento</mat-option>
             <mat-option value="grupamento">Grupamento</mat-option>
+            <mat-option value="amortização" *ngIf="ativo.tipo == 'fundo-imobiliario'">Amortização</mat-option>
         </mat-select>
     </mat-form-field>
     <mat-form-field class="ocultavel">

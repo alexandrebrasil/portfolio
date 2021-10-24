@@ -101,7 +101,7 @@ export interface Ativo {
     precoMercado: number
 }
 
-export type TipoEvento = 'compra' | 'venda' | 'jcp' | 'dividendos' | 'bonificação' | 'grupamento' | 'desdobramento';
+export type TipoEvento = 'compra' | 'venda' | 'jcp' | 'dividendos' | 'bonificação' | 'grupamento' | 'desdobramento' | 'amortização';
 
 export interface Evento {
     id?: number,
@@ -174,6 +174,8 @@ function valorFinanceiro(transacao: TransacaoExtendida): number {
             return (transacao.valor || 0) * transacao.quantidadeAcumulada;
         case "jcp":
             return (transacao.valor || 0) * 0.85 * transacao.quantidadeAcumulada;
+        case "amortização":
+            return (transacao.valor || 0) * transacao.quantidadeAcumulada;
         default:
             return 0;
     }
@@ -183,6 +185,7 @@ function valorContabil(transacao: TransacaoExtendida): number {
     switch(transacao.tipo) {
         case "compra": 
         case "venda":
+        case "amortização":
             return valorFinanceiro(transacao);
         case "bonificação":
             return -(transacao.valor || 0) * transacao.quantidadeTransacao;
