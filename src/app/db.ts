@@ -39,9 +39,7 @@ export class PortfolioDb extends Dexie {
                 map(transacoes => transacoes.map(transacao => ({
                         ... transacao,
                         valorFinanceiro: 0,
-                        valorFinanceiroAcumulado: 0,
                         valorContabil: 0,
-                        valorContabilAcumulado: 0,
                         quantidadeAcumulada: 0,
                         quantidadeTransacao: 0,
                         precoMedio: 0,
@@ -57,47 +55,11 @@ export class PortfolioDb extends Dexie {
 
                     curr.valorContabil = contabil;
                     curr.valorFinanceiro = financeiro;
-                    curr.valorContabilAcumulado = prev.valorContabilAcumulado + contabil;
-                    curr.valorFinanceiroAcumulado = prev.valorFinanceiroAcumulado + financeiro;
 
                     return curr;
                 }, transacoes[0])),
-                // Cálculo do preço médio contábil
-                tap(transacoes => transacoes.reduce((precoMedioAnterior, tx) => {
-                    if(tx.quantidadeAcumulada == 0) {
-                        tx.precoMedio = precoMedioAnterior;
-                        return 0;
-                    }
-
-                    if(tx.tipo !== 'venda') {
-                        let quantidadePrevia = tx.quantidadeAcumulada - tx.quantidadeTransacao,
-                            contabilPrevio = quantidadePrevia * precoMedioAnterior;
-
-                        precoMedioAnterior = Math.abs((contabilPrevio - tx.valorContabil) / tx.quantidadeAcumulada);
-                    }
-
-                    tx.precoMedio = precoMedioAnterior;
-
-                    return precoMedioAnterior;
-                }, 0)),
-                // Cálculo do preço médio financeiro
-                tap(transacoes => transacoes.reduce((precoMedioAnterior, tx) => {
-                    if(tx.quantidadeAcumulada == 0) {
-                        tx.precoMedioFinanceiro = precoMedioAnterior;
-                        return 0;
-                    }
-
-                    if(tx.tipo !== 'venda') {
-                        let quantidadePrevia = tx.quantidadeAcumulada - tx.quantidadeTransacao,
-                            financeiroPrevio = quantidadePrevia * precoMedioAnterior;
-
-                        precoMedioAnterior = Math.abs((financeiroPrevio - tx.valorFinanceiro) / tx.quantidadeAcumulada);
-                    }
-
-                    tx.precoMedioFinanceiro = precoMedioAnterior;
-
-                    return precoMedioAnterior;
-                }, 0))
+                tap(transacoes => calculaPrecoMedio(transacoes, 'precoMedio')),
+                tap(transacoes => calculaPrecoMedio(transacoes, 'precoMedioFinanceiro'))
             );
     }
 }
@@ -129,8 +91,6 @@ export interface TransacaoExtendida extends Evento {
     valorFinanceiro: number;
     valorContabil: number;
 
-    valorFinanceiroAcumulado: number;
-    valorContabilAcumulado: number;
     quantidadeAcumulada: number;
     quantidadeTransacao: number;
 
@@ -138,6 +98,26 @@ export interface TransacaoExtendida extends Evento {
     precoMedioFinanceiro: number;
 }
 
+
+function calculaPrecoMedio(transacoes: TransacaoExtendida[], preco: 'precoMedioFinanceiro' | 'precoMedio') {
+    transacoes.reduce((precoMedioAnterior, tx) => {
+        if(tx.quantidadeAcumulada == 0) {
+            tx[preco] = precoMedioAnterior;
+            return 0;
+        }
+
+        if(tx.tipo !== 'venda') {
+            let quantidadePrevia = tx.quantidadeAcumulada - tx.quantidadeTransacao,
+                valorPrevio = quantidadePrevia * precoMedioAnterior;
+
+            precoMedioAnterior = Math.abs((valorPrevio - tx[preco === 'precoMedio' ? 'valorContabil' : 'valorFinanceiro']) / tx.quantidadeAcumulada);
+        }
+
+        tx[preco] = precoMedioAnterior;
+
+        return precoMedioAnterior;
+    }, 0)
+}
 
 function ordenacaoTransacoes(t1: Evento, t2: Evento) {
     if(t1.data !== t2.data) {
