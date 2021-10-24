@@ -5,7 +5,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { PortfolioComponent } from './portfolio/portfolio.component';
+import { HistoricoOperacoesComponent } from './historico-operacoes/historico-operacoes.component';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -29,7 +29,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { PosicaoComponent } from './posicao/posicao.component';
 import { FormEventoComponent } from './form-evento/form-evento.component';
-import { NovoAtivoDialog } from './portfolio/novo-ativo/novo-ativo.component';
+import { NovoAtivoDialog } from './novo-ativo/novo-ativo.component';
 
 registerLocaleData(localePt);
 
@@ -37,7 +37,7 @@ registerLocaleData(localePt);
     declarations: [
         AppComponent,
         FormEventoComponent,
-        PortfolioComponent,
+        HistoricoOperacoesComponent,
         PosicaoComponent,
         LedgerComponent,
         NovoAtivoDialog,

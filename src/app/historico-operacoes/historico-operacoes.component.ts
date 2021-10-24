@@ -1,14 +1,14 @@
 import { Component, EventEmitter } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { Ativo, PortfolioDb } from "../db";
-import { NovoAtivoDialog } from "./novo-ativo/novo-ativo.component";
+import { NovoAtivoDialog } from "../novo-ativo/novo-ativo.component";
 
 
 @Component({
-    templateUrl: './portfolio.component.html',
-    styleUrls: [ './portfolio.component.scss' ]
+    templateUrl: './historico-operacoes.component.html',
+    styleUrls: [ './historico-operacoes.component.scss' ]
 })
-export class PortfolioComponent {
+export class HistoricoOperacoesComponent {
     acoes$ = new EventEmitter<Ativo[]>();
     fundos$ = new EventEmitter<Ativo[]>();
 

@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { PortfolioComponent } from './portfolio/portfolio.component';
+import { HistoricoOperacoesComponent } from './historico-operacoes/historico-operacoes.component';
 
 const routes: Routes = [{
-        component: PortfolioComponent,
-        path: 'portfolio'
+        component: HistoricoOperacoesComponent,
+        path: 'historico'
     }, {
         path: '',
-        redirectTo: '/portfolio',
+        redirectTo: '/historico',
         pathMatch: 'full'
     }
 ];
