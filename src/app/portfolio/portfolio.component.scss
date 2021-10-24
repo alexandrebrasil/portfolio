@@ -10,4 +10,9 @@
     .fundos-imobiliarios {
         margin-top: 32px;
     }
+
+    mat-expansion-panel mat-panel-title {
+        width: 100px;
+        max-width: 100px;
+    }
 }
