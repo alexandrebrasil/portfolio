@@ -2,8 +2,20 @@
     <mat-icon>add</mat-icon>
 </button>
 
+<div class="mat-title">Ações</div>
 <mat-accordion multi>
-    <mat-expansion-panel *ngFor="let ativo of posicao$ | async; first as first; trackBy: trackByAtivo">
+    <ng-container *ngFor="let acao of acoes$ | async; trackBy: trackByAtivo" [ngTemplateOutlet]="expansion" [ngTemplateOutletContext]="{ativo: acao}">
+    </ng-container>
+</mat-accordion>
+
+<div class="mat-title fundos-imobiliarios">Fundos imobiliários</div>
+<mat-accordion multi>
+    <ng-container *ngFor="let fundo of fundos$ | async; trackBy: trackByAtivo" [ngTemplateOutlet]="expansion" [ngTemplateOutletContext]="{ativo: fundo}">
+    </ng-container>
+</mat-accordion>
+
+<ng-template #expansion let-ativo='ativo'>
+    <mat-expansion-panel>
         <mat-expansion-panel-header>
             <mat-panel-title>{{ativo.ticker}}</mat-panel-title>
             <mat-panel-description>{{ativo.empresa}}</mat-panel-description>
@@ -13,4 +25,4 @@
             <portfolio-posicao [ativo]="ativo"></portfolio-posicao>
         </ng-template>
     </mat-expansion-panel>
-</mat-accordion>
+</ng-template>

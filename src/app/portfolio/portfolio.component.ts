@@ -9,14 +9,16 @@ import { NovoAtivoDialog } from "./novo-ativo/novo-ativo.component";
     styleUrls: [ './portfolio.component.scss' ]
 })
 export class PortfolioComponent {
-    posicao$ = new EventEmitter<Ativo[]>();
+    acoes$ = new EventEmitter<Ativo[]>();
+    fundos$ = new EventEmitter<Ativo[]>();
 
     constructor(private db: PortfolioDb, private dialog: MatDialog) {
         this.atualizaPosicao();
     }
 
-    atualizaPosicao() {
-        this.db.ativos.orderBy('ticker').toArray().then(txs => this.posicao$.emit(txs));
+    async atualizaPosicao() {
+        this.acoes$.emit(await this.db.ativosPorTipo("ação"));
+        this.fundos$.emit(await this.db.ativosPorTipo("fundo-imobiliario"));
     }
 
     trackByAtivo(index: number, ativo: Ativo) {

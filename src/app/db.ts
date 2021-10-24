@@ -20,8 +20,16 @@ export class PortfolioDb extends Dexie {
             return tx.table('ativos').toCollection().modify(ativo => ativo.tipo = 'ação')
         })
 
+        this.version(4).stores({
+            ativos: '&ticker,tipo'
+        });
+
         this.eventos = this.table('eventos');
         this.ativos = this.table('ativos');
+    }
+
+    async ativosPorTipo(tipo: TipoAtivo) {
+        return this.ativos.where('tipo').equals(tipo).sortBy('ticker');
     }
 
     transacoes(ativo: string): Observable<Array<TransacaoExtendida>> {
@@ -97,9 +105,11 @@ export class PortfolioDb extends Dexie {
 export interface Ativo {
     ticker: string
     empresa: string
-    tipo: 'ação' | 'fundo-imobiliario',
+    tipo: TipoAtivo
     precoMercado: number
 }
+
+export type TipoAtivo = 'ação' | 'fundo-imobiliario';
 
 export type TipoEvento = 'compra' | 'venda' | 'jcp' | 'dividendos' | 'bonificação' | 'grupamento' | 'desdobramento' | 'amortização';
 
