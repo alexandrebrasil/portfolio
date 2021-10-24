@@ -1,0 +1,76 @@
+<h1 class="mat-title">Posição atual</h1>
+
+<ng-container [ngTemplateOutlet]="posicao" 
+    [ngTemplateOutletContext]="{titulo: 'Ações', posicoes$: acoes$, totalInvestido: totalInvestidoAcoes, resultadoTotal: resultadoPosicaoAcoes}">
+</ng-container>
+
+<ng-container [ngTemplateOutlet]="posicao" 
+    [ngTemplateOutletContext]="{titulo: 'Fundos imobiliários', posicoes$: fundosImobiliarios$, totalInvestido: totalInvestidoFII, resultadoTotal: resultadoPosicaoFII}">
+</ng-container>
+
+<ng-template #posicao let-titulo="titulo" let-posicoes$="posicoes$" let-totalInvestido="totalInvestido" let-resultadoTotal="resultadoTotal">
+    <h2 class="mat-subheading-2">{{titulo}}</h2>
+
+    <mat-table [dataSource]="posicoes$">
+        <ng-container matColumnDef="empresa">
+            <mat-header-cell *matHeaderCellDef>Empresa</mat-header-cell>
+            <mat-cell  *matCellDef="let posicao"><span>{{posicao.empresa}}</span></mat-cell>
+            <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="ticker">
+            <mat-header-cell *matHeaderCellDef>Ticker</mat-header-cell>
+            <mat-cell  *matCellDef="let posicao">{{posicao.ticker}}</mat-cell>
+            <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="quantidade">
+            <mat-header-cell *matHeaderCellDef>Quantidade</mat-header-cell>
+            <mat-cell  *matCellDef="let posicao">{{posicao.quantidade}}</mat-cell>
+            <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="precoMedio">
+            <mat-header-cell *matHeaderCellDef>Custo aquisição</mat-header-cell>
+            <mat-cell  *matCellDef="let posicao">{{posicao.precoMedio | currency}}</mat-cell>
+            <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="precoMercado">
+            <mat-header-cell *matHeaderCellDef>Cotação</mat-header-cell>
+            <mat-cell  *matCellDef="let posicao" 
+                        [class.prejuizo]="posicao.precoMercado < posicao.precoMedio"
+                        [class.lucro]="posicao.precoMercado > posicao.precoMedio">
+                {{posicao.precoMercado | currency}}
+            </mat-cell>
+            <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="posicao">
+            <mat-header-cell *matHeaderCellDef>Posição</mat-header-cell>
+            <mat-cell  *matCellDef="let posicao">{{posicao.precoMercado * posicao.quantidade | currency}}</mat-cell>
+            <mat-footer-cell *matFooterCellDef>{{totalInvestido | currency}}</mat-footer-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="percentualCarteira">
+            <mat-header-cell *matHeaderCellDef>% Carteira</mat-header-cell>
+            <mat-cell  *matCellDef="let posicao">{{posicao.precoMercado * posicao.quantidade / totalInvestido | percent:'1.2'}}</mat-cell>
+            <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="resultado">
+            <mat-header-cell *matHeaderCellDef>Resultado</mat-header-cell>
+            <mat-cell  *matCellDef="let posicao"
+                    [class.prejuizo]="posicao.precoMercado < posicao.precoMedio"
+                    [class.lucro]="posicao.precoMercado > posicao.precoMedio">
+                {{(posicao.precoMercado - posicao.precoMedio) * posicao.quantidade | currency}}
+            </mat-cell>
+            <mat-footer-cell *matFooterCellDef>{{resultadoTotal | currency}}</mat-footer-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="colunas; sticky: true"></mat-header-row>
+        <mat-row *matRowDef="let transacao; columns: colunas"></mat-row>
+        <mat-footer-row *matFooterRowDef="colunas; sticky: true"></mat-footer-row>
+    </mat-table>
+
+</ng-template>

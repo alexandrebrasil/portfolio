@@ -30,6 +30,7 @@ import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { PosicaoComponent } from './posicao/posicao.component';
 import { FormEventoComponent } from './form-evento/form-evento.component';
 import { NovoAtivoDialog } from './novo-ativo/novo-ativo.component';
+import { PortfolioComponent } from './portfolio/portfolio.component';
 
 registerLocaleData(localePt);
 
@@ -38,9 +39,10 @@ registerLocaleData(localePt);
         AppComponent,
         FormEventoComponent,
         HistoricoOperacoesComponent,
-        PosicaoComponent,
         LedgerComponent,
         NovoAtivoDialog,
+        PortfolioComponent,
+        PosicaoComponent,
         
         TipoEventoPipe
     ],

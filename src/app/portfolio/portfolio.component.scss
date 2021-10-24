@@ -1,0 +1,56 @@
+@use 'theme';
+@use '~@angular/material' as mat;
+
+:host {
+    display: block;
+}
+
+mat-table {
+    .mat-header-cell,
+    .mat-cell,
+    .mat-footer-cell {
+
+        &:not(:first-of-type) {
+            padding-left: 8px;
+        }
+        &:not(:last-of-type) {
+            padding-right: 8px;
+        }
+    }
+
+    .mat-column-empresa > span {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .mat-column-ticker {
+        max-width: 80px;
+    }
+
+    .mat-column-percentualCarteira {
+        max-width: 90px;
+    }
+
+    .mat-column-quantidade,
+    .mat-column-precoMedio,
+    .mat-column-precoMercado,
+    .mat-column-resultado,
+    .mat-column-posicao,
+    .mat-column-percentualCarteira {
+        text-align: right;
+        justify-content: flex-end;
+    }
+
+    .prejuizo {
+        color: mat.get-color-from-palette(theme.$portfolio-warn, "default");
+    }
+    
+    .lucro {
+        color: mat.get-color-from-palette(theme.$portfolio-primary, "default");
+    }
+}
+
+.mat-subheading-2:not(:first-of-type){
+    margin-top: 32px;
+}

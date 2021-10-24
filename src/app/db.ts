@@ -1,6 +1,6 @@
 import Dexie from "dexie";
-import { from, Observable } from "rxjs";
-import { map, tap } from "rxjs/operators";
+import { forkJoin, from, Observable } from "rxjs";
+import { map, mergeMap, tap } from "rxjs/operators";
 
 export class PortfolioDb extends Dexie {
     ativos: Dexie.Table<Ativo, string>;
@@ -30,6 +30,27 @@ export class PortfolioDb extends Dexie {
 
     async ativosPorTipo(tipo: TipoAtivo) {
         return this.ativos.where('tipo').equals(tipo).sortBy('ticker');
+    }
+
+    posicoesAtivas(tipo: TipoAtivo) {
+        return from(this.ativos.where('tipo').equals(tipo).sortBy('ticker'))
+            .pipe(
+                mergeMap(ativos => 
+                    forkJoin(ativos.map(ativo => 
+                        this.transacoes(ativo.ticker)
+                            .pipe(
+                                map(tx => {
+                                    return {
+                                        ... ativo, 
+                                        posicaoAtual: tx?.[tx?.length - 1]
+                                    }
+                                }),
+                                tap(tx => console.log("Post map", tx))
+                            )
+                    ))
+                ),
+                map(ativos => ativos.filter(ativo => ativo.posicaoAtual.quantidadeAcumulada != 0))
+            );
     }
 
     transacoes(ativo: string): Observable<Array<TransacaoExtendida>> {
