@@ -11,7 +11,7 @@ export class PosicaoComponent implements OnChanges {
     @Input()
     ativo: Ativo;
 
-    colunas = ['data', 'quantidade', 'resultadoFinanceiro', 'resultadoContabil'];
+    colunas = ['data', 'valor', 'quantidade', 'resultadoFinanceiro', 'resultadoContabil'];
 
     transacoes: TransacaoExtendida[];
     quantidadeAtual: number;
@@ -45,6 +45,7 @@ export class PosicaoComponent implements OnChanges {
         
         this.operacoesFechadas = transacoes.filter(tx => tx.tipo === "venda").map(venda => ({
             data: venda.data,
+            valor: venda.valorFinanceiro,
             quantidade: venda.quantidade || 0,
             resultadoFinanceiro: venda.valorFinanceiro - venda.precoMedioFinanceiro * (venda.quantidade || 0),
             resultadoContabil: venda.valorFinanceiro - venda.precoMedio * (venda.quantidade || 0)

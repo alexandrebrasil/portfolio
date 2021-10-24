@@ -53,6 +53,13 @@
                 </mat-cell>
                 <mat-footer-cell *matFooterCellDef></mat-footer-cell>
             </ng-container>
+            <ng-container matColumnDef="valor">
+                <mat-header-cell *matHeaderCellDef>Valor</mat-header-cell>
+                <mat-cell *matCellDef="let operacao">
+                    {{operacao.valor | currency }}
+                </mat-cell>
+                <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+            </ng-container>
             <ng-container matColumnDef="resultadoFinanceiro">
                 <mat-header-cell *matHeaderCellDef>Resultado</mat-header-cell>
                 <mat-cell *matCellDef="let operacao"  [class]="{prejuizo: operacao.resultadoFinanceiro < 0, lucro: operacao.resultadoFinanceiro > 0}">
