@@ -2,7 +2,7 @@
     <mat-icon>add</mat-icon>
 </button>
 
-<mat-accordion>
+<mat-accordion multi>
     <mat-expansion-panel *ngFor="let ativo of posicao$ | async; first as first; trackBy: trackByAtivo">
         <mat-expansion-panel-header>
             <mat-panel-title>{{ativo.ticker}}</mat-panel-title>
