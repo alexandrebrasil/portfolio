@@ -44,8 +44,7 @@ export class PortfolioDb extends Dexie {
                                         ... ativo, 
                                         posicaoAtual: tx?.[tx?.length - 1]
                                     }
-                                }),
-                                tap(tx => console.log("Post map", tx))
+                                })
                             )
                     ))
                 ),
