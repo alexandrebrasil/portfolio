@@ -35,9 +35,9 @@ export class PortfolioComponent implements OnInit {
             .pipe(
                 map(ativos => ativos.map(ativo => ({
                     ... ativo,
-                    quantidade: ativo.posicaoAtual.quantidadeAcumulada,
-                    precoMedio: ativo.posicaoAtual.precoMedioFinanceiro,
-                    custoContabil: ativo.posicaoAtual.precoMedio * ativo.posicaoAtual.quantidadeAcumulada
+                    quantidade: ativo.posicaoAtual?.quantidadeAcumulada,
+                    precoMedio: ativo.posicaoAtual?.precoMedioFinanceiro,
+                    custoContabil: ativo.posicaoAtual?.precoMedio * ativo.posicaoAtual?.quantidadeAcumulada
                 })))
             )
             .subscribe(posicoes => {

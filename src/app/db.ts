@@ -48,7 +48,7 @@ export class PortfolioDb extends Dexie {
                             )
                     ))
                 ),
-                map(ativos => ativos.filter(ativo => ativo.posicaoAtual.quantidadeAcumulada != 0))
+                map(ativos => ativos.filter(ativo => !!ativo.posicaoAtual?.quantidadeAcumulada))
             );
     }
 
