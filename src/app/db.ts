@@ -82,6 +82,10 @@ export class PortfolioDb extends Dexie {
                 tap(transacoes => calculaPrecoMedio(transacoes, 'precoMedioFinanceiro'))
             );
     }
+
+    async atualizaPrecoAtivo(ativo: string, cotacao: number) {
+        await this.ativos.update(ativo, {precoMercado: cotacao});
+    }
 }
 
 export interface Ativo {

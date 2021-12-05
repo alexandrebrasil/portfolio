@@ -11,7 +11,7 @@
 <ng-template #posicao let-titulo="titulo" let-posicoes$="posicoes$" let-totalInvestido="totalInvestido" let-resultadoTotal="resultadoTotal">
     <h2 class="mat-subheading-2">{{titulo}}</h2>
 
-    <mat-table [dataSource]="posicoes$">
+    <mat-table [dataSource]="posicoes$" [trackBy]="trackByTicker">
         <ng-container matColumnDef="empresa">
             <mat-header-cell *matHeaderCellDef>Empresa</mat-header-cell>
             <mat-cell  *matCellDef="let posicao"><span>{{posicao.empresa}}</span></mat-cell>
@@ -41,6 +41,7 @@
             <mat-cell  *matCellDef="let posicao" 
                         [class.prejuizo]="posicao.precoMercado < posicao.precoMedio"
                         [class.lucro]="posicao.precoMercado > posicao.precoMedio">
+                <input type="number" step="0.01" value="{{posicao.precoMercado}}" (blur)="atualizaPreco($any($event.target).value, posicao)">
                 {{posicao.precoMercado | currency}}
             </mat-cell>
             <mat-footer-cell *matFooterCellDef></mat-footer-cell>

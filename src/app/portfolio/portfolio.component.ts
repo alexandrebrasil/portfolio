@@ -20,6 +20,10 @@ export class PortfolioComponent implements OnInit {
     resultadoPosicaoFII: number;
 
     ngOnInit() {
+        this.atualizaPosicoes();
+    }
+
+    atualizaPosicoes() {
         this.posicoes("ação", this.acoes$, 'totalInvestidoAcoes', 'resultadoPosicaoAcoes');
         this.posicoes("fundo-imobiliario", this.fundosImobiliarios$, "totalInvestidoFII", 'resultadoPosicaoFII');
     }
@@ -41,6 +45,17 @@ export class PortfolioComponent implements OnInit {
                 this[campoResultado] = posicoes.reduce((total, p) => p.quantidade * (p.precoMercado - p.precoMedio) + total, 0);
                 emitter.emit(posicoes);
             });
+    }
+
+    async atualizaPreco(cotacao, posicao: Posicao) {
+        if(cotacao && +cotacao != posicao.precoMercado) {
+            await this.db.atualizaPrecoAtivo(posicao.ticker, +cotacao);
+            this.atualizaPosicoes();
+        }
+    }
+
+    trackByTicker(index: number, ativo: Ativo) {
+        return ativo.ticker;
     }
 }
 
