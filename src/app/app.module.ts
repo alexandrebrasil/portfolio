@@ -31,12 +31,14 @@ import { PosicaoComponent } from './posicao/posicao.component';
 import { FormEventoComponent } from './form-evento/form-evento.component';
 import { NovoAtivoDialog } from './novo-ativo/novo-ativo.component';
 import { PortfolioComponent } from './portfolio/portfolio.component';
+import { AtivosComponent } from './ativos/ativos.component';
 
 registerLocaleData(localePt);
 
 @NgModule({
     declarations: [
         AppComponent,
+        AtivosComponent,
         FormEventoComponent,
         HistoricoOperacoesComponent,
         LedgerComponent,
