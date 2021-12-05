@@ -1,3 +1,16 @@
 <h1 class="mat-title">Ativos</h1>
 
 <input type="file" #arquivo (change)="atualiza(arquivo.files)">
+
+<h2 class="mat-subheading-2">Backup informações</h2>
+
+<button mat-flat-button color="primary" (click)="gerarBackup()">
+    Baixar
+</button>
+
+<br/>
+
+<input type="file" #import>
+<button mat-flat-button color="primary" (click)="carregarBackup(import.files)">
+    Restaurar backup
+</button>

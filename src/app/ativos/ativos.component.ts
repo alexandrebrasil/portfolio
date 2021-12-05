@@ -1,21 +1,12 @@
-import { Component, OnInit } from "@angular/core";
-import { from, Observable } from "rxjs";
-import { Ativo, PortfolioDb } from "../db";
+import { Component } from "@angular/core";
+import { PortfolioDb } from "../db";
 
 @Component({
     templateUrl: './ativos.component.html',
     styleUrls: [ './ativos.component.scss' ]
 })
-export class AtivosComponent implements OnInit {
+export class AtivosComponent {
     constructor(private db: PortfolioDb) {}
-
-    acoes$: Observable<Ativo[]>;
-    fiis$: Observable<Ativo[]>;
-
-    ngOnInit(): void {
-        this.acoes$ = from(this.db.ativosPorTipo("ação"));
-        this.fiis$ = from(this.db.ativosPorTipo("fundo-imobiliario"));
-    }
 
     async atualiza(arquivos: FileList | null) {
         let arquivo = arquivos?.item(0);
@@ -46,6 +37,56 @@ export class AtivosComponent implements OnInit {
             });
             reader.readAsText(arquivo);
         }
-        
     }
+
+    async gerarBackup() {
+        let backup = {
+            ativos: await this.db.ativos.toArray(),
+            transacoes: await this.db.eventos.toArray()
+        }
+
+        this.downloadFile(JSON.stringify(backup));
+    }
+
+    async carregarBackup(arquivos: FileList | null) {
+        let arquivo = arquivos?.item(0);
+
+        if(arquivo) {
+            console.info("Carregando backup");
+
+            const reader = new FileReader();
+            
+            reader.addEventListener('load', async (event) => {
+                console.log("Load")
+                if(event.loaded) {
+                    console.log("Loaded")
+                    let backup = JSON.parse(event.target?.result as string);
+
+                    console.log("Backup", backup)
+
+                    if(backup.ativos && backup.transacoes) {
+                        await this.db.ativos.clear();
+                        await this.db.eventos.clear();
+
+                        console.log("Tabelas apagadas");
+
+                        console.log((await this.db.ativos.bulkAdd(backup.ativos, {allKeys: true})).length, 'ativos importados');
+                        console.log((await this.db.eventos.bulkAdd(backup.transacoes, {allKeys: true})).length, 'eventos importados');
+                    }
+                }
+            });
+            reader.readAsText(arquivo);
+        }
+
+    }
+
+    private downloadFile(text: string) {
+        let download =  document.createElement('a');
+        const fileType = 'text/json';
+        download.setAttribute('href', `data:${fileType};charset=utf-8,${encodeURIComponent(text)}`);
+        download.setAttribute('download', 'portfolio.json');
+    
+        var event = new MouseEvent("click");
+        download.dispatchEvent(event);
+      }
 }
