@@ -16,11 +16,15 @@ export class PosicaoComponent implements OnChanges {
     transacoes: TransacaoExtendida[];
     quantidadeAtual: number;
     precoMedio: number;
+    precoMedioContabil: number;
     custoContabil: number;
 
     operacoesFechadas: Operacao[];
     resultadoContabilAcumulado: number;
     resultadoFinanceiroAcumulado: number;
+
+    totalInvestido: number;
+    totalDividendos: number;
 
     constructor(private db: PortfolioDb) {}
 
@@ -41,7 +45,13 @@ export class PosicaoComponent implements OnChanges {
 
         this.quantidadeAtual = ultimaTransacao?.quantidadeAcumulada;
         this.precoMedio = ultimaTransacao?.precoMedioFinanceiro;
+        this.precoMedioContabil = ultimaTransacao?.precoMedio;
         this.custoContabil = ultimaTransacao?.precoMedio * ultimaTransacao?.quantidadeAcumulada;
+
+        this.totalDividendos = transacoes.reduce((prev, curr) => prev + (curr.tipo === 'dividendos' || curr.tipo === 'jcp' || curr.tipo === 'amortização' ? curr.valorFinanceiro : 0), 0);
+        this.totalInvestido = transacoes.reduce((prev, curr) => {
+            return prev + (curr.tipo === 'compra' || curr.tipo === 'venda' ? - curr.valorFinanceiro : 0);
+        }, 0);
         
         this.operacoesFechadas = transacoes.filter(tx => tx.tipo === "venda").map(venda => ({
             data: venda.data,
