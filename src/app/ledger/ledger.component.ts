@@ -8,7 +8,7 @@ import { TransacaoExtendida } from "../db";
     styleUrls: [ './ledger.component.scss' ]
 })
 export class LedgerComponent implements OnChanges {
-    colunas = ['data', 'tipo', 'unitario', 'quantidade', 'valorFinanceiro', 'resultadoFinanceiro', 'resultado', 'acoes'];
+    colunas = ['data', 'data-ex', 'tipo', 'unitario', 'quantidade', 'valorFinanceiro', 'resultadoFinanceiro', 'resultado', 'acoes'];
 
     resultadoFinanceiroAcumulado: number;
     custoLiquido: number;

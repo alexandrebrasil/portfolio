@@ -55,7 +55,7 @@ export class PortfolioDb extends Dexie {
     transacoes(ativo: string): Observable<Array<TransacaoExtendida>> {
         return from(this.eventos.where('ativo').equals(ativo).toArray())
             .pipe(
-                map(transacoes => transacoes.sort(ordenacaoTransacoes)),
+                map(transacoes => transacoes.sort(ordenacaoDataEx)),
                 map(transacoes => transacoes.map(transacao => ({
                         ... transacao,
                         valorFinanceiro: 0,
@@ -68,7 +68,7 @@ export class PortfolioDb extends Dexie {
                 )),
                 tap(transacoes => transacoes.reduce((prev, curr) => {
                     curr.quantidadeTransacao = quantidade(curr, prev.quantidadeAcumulada);
-                    curr.quantidadeAcumulada = prev.quantidadeAcumulada + curr.quantidadeTransacao;
+                    curr.quantidadeAcumulada = prev.quantidadeAcumulada + (afetaQuantidade(curr) ? curr.quantidadeTransacao : 0);
 
                     let financeiro = valorFinanceiro(curr),
                         contabil = valorContabil(curr);
@@ -79,7 +79,8 @@ export class PortfolioDb extends Dexie {
                     return curr;
                 }, transacoes[0])),
                 tap(transacoes => calculaPrecoMedio(transacoes, 'precoMedio')),
-                tap(transacoes => calculaPrecoMedio(transacoes, 'precoMedioFinanceiro'))
+                tap(transacoes => calculaPrecoMedio(transacoes, 'precoMedioFinanceiro')),
+                map(transacoes => transacoes.sort(ordenacaoDataFinanceira))
             );
     }
 
@@ -131,21 +132,35 @@ function calculaPrecoMedio(transacoes: TransacaoExtendida[], preco: 'precoMedioF
         }
 
         if(tx.tipo !== 'venda') {
-            let quantidadePrevia = tx.quantidadeAcumulada - tx.quantidadeTransacao,
+            let quantidadePrevia = tx.quantidadeAcumulada - (afetaQuantidade(tx) ? tx.quantidadeTransacao : 0),
                 valorPrevio = quantidadePrevia * precoMedioAnterior;
 
-            precoMedioAnterior = Math.abs((valorPrevio - tx[preco === 'precoMedio' ? 'valorContabil' : 'valorFinanceiro']) / tx.quantidadeAcumulada);
+            precoMedioAnterior = (valorPrevio - tx[preco === 'precoMedio' ? 'valorContabil' : 'valorFinanceiro']) / tx.quantidadeAcumulada;
         }
 
         tx[preco] = precoMedioAnterior;
 
         return precoMedioAnterior;
-    }, 0)
+    }, 0);
 }
 
-function ordenacaoTransacoes(t1: Evento, t2: Evento) {
-    if(t1.data !== t2.data) {
-        return t1.data.localeCompare(t2.data);
+function ordenacaoDataEx(t1: Evento, t2: Evento) {
+    let data1 = t1.dataEx || t1.data,
+        data2 = t2.dataEx || t2.data;
+
+    if(data1 !== data2) {
+        return data1.localeCompare(data2);
+    } 
+
+    return ordemTipo(t1.tipo) - ordemTipo(t2.tipo);
+}
+
+function ordenacaoDataFinanceira(t1: Evento, t2: Evento) {
+    let data1 = t1.data,
+        data2 = t2.data;
+
+    if(data1 !== data2) {
+        return data1.localeCompare(data2);
     } 
 
     return ordemTipo(t1.tipo) - ordemTipo(t2.tipo);
@@ -174,7 +189,20 @@ function quantidade(transacao: Evento, quantidadeAcumulada: number): number {
         case "grupamento":
             return - Math.ceil(quantidadeAcumulada * (1 - 1 / (transacao.multiplicador || 1)));
         default:
-            return 0;
+            return quantidadeAcumulada;
+    }
+}
+
+function afetaQuantidade(transacao: Evento): boolean {
+    switch(transacao.tipo) {
+        case "compra": 
+        case "venda":
+        case "bonificação":
+        case "desdobramento":
+        case "grupamento":
+            return true;
+        default:
+            return false;
     }
 }
 
@@ -185,11 +213,11 @@ function valorFinanceiro(transacao: TransacaoExtendida): number {
         case "venda":
             return (transacao.quantidade || 0) * (transacao.valor || 0) - (transacao.taxas || 0);
         case "dividendos":
-            return (transacao.valor || 0) * transacao.quantidadeAcumulada;
+            return (transacao.valor || 0) * transacao.quantidadeTransacao;
         case "jcp":
-            return (transacao.valor || 0) * 0.85 * transacao.quantidadeAcumulada;
+            return (transacao.valor || 0) * 0.85 * transacao.quantidadeTransacao;
         case "amortização":
-            return (transacao.valor || 0) * transacao.quantidadeAcumulada;
+            return (transacao.valor || 0) * transacao.quantidadeTransacao;
         default:
             return 0;
     }
