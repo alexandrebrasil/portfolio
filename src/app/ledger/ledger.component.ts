@@ -15,6 +15,8 @@ export class LedgerComponent implements OnChanges {
     quantidadeAtual: number;
     resultadoAcumulado: number;
 
+    hoje = new Date().toISOString().substring(0, 10);
+
     @Input()
     transacoes: TransacaoExtendida[];
 

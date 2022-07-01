@@ -29,4 +29,16 @@ mat-table {
         color: mat.get-color-from-palette(theme.$portfolio-primary, "default");
         font-weight: 500;
     }
+
+    .positiva {
+        color: mat.get-color-from-palette(theme.$portfolio-primary, "default");
+    }
+    
+    .negativa {
+        color: mat.get-color-from-palette(theme.$portfolio-warn, "default");
+    }
+
+    .futuro {
+        color: mat.get-color-from-palette(theme.$portfolio-accent, "default");
+    }
 }

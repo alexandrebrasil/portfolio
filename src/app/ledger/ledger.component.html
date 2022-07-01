@@ -1,15 +1,15 @@
 <mat-table [dataSource]="transacoes">
     <ng-container matColumnDef="data">
-        <mat-header-cell *matHeaderCellDef>Data</mat-header-cell>
-        <mat-cell *matCellDef="let transacao">
-            {{transacao.data | date:'shortDate'}}
+        <mat-header-cell *matHeaderCellDef>Data evento</mat-header-cell>
+        <mat-cell *matCellDef="let tx" [class.futuro]="(tx.dataEx || tx.data) > hoje">
+            {{tx.dataEx || tx.data | date:'shortDate'}}
         </mat-cell>
         <mat-footer-cell *matFooterCellDef></mat-footer-cell>
     </ng-container>
     <ng-container matColumnDef="data-ex">
-        <mat-header-cell *matHeaderCellDef>Data Ex</mat-header-cell>
-        <mat-cell *matCellDef="let transacao">
-            {{transacao.dataEx | date:'shortDate'}}
+        <mat-header-cell *matHeaderCellDef>Data liquidação</mat-header-cell>
+        <mat-cell *matCellDef="let tx"  [class.futuro]="tx.data > hoje">
+            {{tx.data | date:'shortDate'}}
         </mat-cell>
         <mat-footer-cell *matFooterCellDef></mat-footer-cell>
     </ng-container>
@@ -34,8 +34,8 @@
     </ng-container>
     <ng-container matColumnDef="quantidade">
         <mat-header-cell *matHeaderCellDef>Quantidade</mat-header-cell>
-        <mat-cell *matCellDef="let transacao">
-            {{transacao.quantidadeTransacao ? (transacao.quantidadeTransacao | number) : '-'}}
+        <mat-cell *matCellDef="let transacao" [class.positiva]="transacao.quantidadeTransacao > 0" [class.negativa]="transacao.quantidadeTransacao < 0">
+            {{transacao.quantidadeTransacao || transacao.quantidadeAcumulada | number}}
         </mat-cell>
         <mat-footer-cell *matFooterCellDef>{{quantidadeAtual | number}}</mat-footer-cell>
     </ng-container>
