@@ -266,7 +266,7 @@ function valorContabil(transacao: TransacaoExtendida): number {
         case "amortização":
             return valorFinanceiro(transacao);
         case "bonificação":
-            return -(transacao.valor || 0) * transacao.quantidadeAcumulada;
+            return -(transacao.valor || 0) * transacao.quantidadeTransacao;
         default:
             return 0;
     }   
