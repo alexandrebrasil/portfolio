@@ -2,11 +2,16 @@
 <mat-tab-group>
     <mat-tab label="Posição atual">
         <div class="container">
-            <div class="posicao-atual">
+            <ng-template #posicaoFechada>
+                Atualmente sem posição aberta.
+            </ng-template>
+
+            <div class="posicao-atual" *ngIf="quantidadeAtual; else posicaoFechada">
                 <div>
                     <label>Quantidade</label>
                     <div>{{quantidadeAtual || 0 | number}}</div>
                 </div>
+
                 <div>
                     <label>Preço médio</label>
                     <div>{{precoMedioContabil | currency}}</div>
@@ -21,15 +26,15 @@
                 </div>
                 <div>
                     <label>Valor investido (histórico)</label>
-                    <div>{{totalInvestido | currency}}</div>
+                    <div>{{quantidadeAtual * precoMedioContabil | currency}}</div>
                 </div>
                 <div>
                     <label>Dividendos/JCP</label>
-                    <div>{{totalDividendos | currency}}</div>
+                    <div>{{quantidadeAtual * (precoMedioContabil - precoMedio) | currency}}</div>
                 </div>
                 <div>
                     <label>Valor liquido investido</label>
-                    <div>{{totalInvestido - totalDividendos | currency}}</div>
+                    <div>{{quantidadeAtual * precoMedio | currency}}</div>
                 </div>
                 <div>
                     <label>Valor de mercado</label>
@@ -38,14 +43,14 @@
                 <div>
                     <label>Resultado financeiro</label>
                     <div [class.prejuizo]="ativo.precoMercado * quantidadeAtual - quantidadeAtual * precoMedio < 0"
-                         [class.lucro]="ativo.precoMercado * quantidadeAtual - quantidadeAtual * precoMedio > 0">
+                            [class.lucro]="ativo.precoMercado * quantidadeAtual - quantidadeAtual * precoMedio > 0">
                         {{ativo.precoMercado * quantidadeAtual - quantidadeAtual * precoMedio | currency}}
                     </div>
                 </div>
                 <div>
                     <label>Resultado contábil</label>
                     <div [class.prejuizo]="ativo.precoMercado * quantidadeAtual - custoContabil < 0"
-                         [class.lucro]="ativo.precoMercado * quantidadeAtual - custoContabil > 0">
+                            [class.lucro]="ativo.precoMercado * quantidadeAtual - custoContabil > 0">
                         {{ativo.precoMercado * quantidadeAtual - custoContabil | currency}}
                     </div>
                 </div>

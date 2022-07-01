@@ -23,9 +23,6 @@ export class PosicaoComponent implements OnChanges {
     resultadoContabilAcumulado: number;
     resultadoFinanceiroAcumulado: number;
 
-    totalInvestido: number;
-    totalDividendos: number;
-
     constructor(private db: PortfolioDb) {}
 
     ngOnChanges() {
@@ -48,11 +45,6 @@ export class PosicaoComponent implements OnChanges {
         this.precoMedioContabil = ultimaTransacao?.precoMedio;
         this.custoContabil = ultimaTransacao?.precoMedio * ultimaTransacao?.quantidadeAcumulada;
 
-        this.totalDividendos = transacoes.reduce((prev, curr) => prev + (curr.tipo === 'dividendos' || curr.tipo === 'jcp' || curr.tipo === 'amortização' ? curr.valorFinanceiro : 0), 0);
-        this.totalInvestido = transacoes.reduce((prev, curr) => {
-            return prev + (curr.tipo === 'compra' || curr.tipo === 'venda' ? - curr.valorFinanceiro : 0);
-        }, 0);
-        
         this.operacoesFechadas = transacoes.filter(tx => tx.tipo === "venda").map(venda => ({
             data: venda.data,
             valor: venda.valorFinanceiro,
