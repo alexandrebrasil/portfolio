@@ -79,8 +79,7 @@ export class PortfolioDb extends Dexie {
                     return curr;
                 }, transacoes[0])),
                 tap(transacoes => calculaPrecoMedio(transacoes, 'precoMedio')),
-                tap(transacoes => calculaPrecoMedio(transacoes, 'precoMedioFinanceiro')),
-                map(transacoes => transacoes.sort(ordenacaoDataFinanceira))
+                tap(transacoes => calculaPrecoMedio(transacoes, 'precoMedioFinanceiro'))
             );
     }
 
@@ -203,17 +202,6 @@ function ordenacaoDataEx(t1: Evento, t2: Evento) {
     return ordemTipo(t1.tipo) - ordemTipo(t2.tipo);
 }
 
-function ordenacaoDataFinanceira(t1: Evento, t2: Evento) {
-    let data1 = t1.data,
-        data2 = t2.data;
-
-    if(data1 !== data2) {
-        return data1.localeCompare(data2);
-    } 
-
-    return ordemTipo(t1.tipo) - ordemTipo(t2.tipo);
-}
-
 function ordemTipo(tipo: TipoEvento) {
     if(tipo === 'compra' || tipo === 'venda') {
         return 0;
@@ -237,7 +225,7 @@ function quantidade(transacao: Evento, quantidadeAcumulada: number): number {
         case "grupamento":
             return - Math.ceil(quantidadeAcumulada * (1 - 1 / (transacao.multiplicador || 1)));
         default:
-            return quantidadeAcumulada;
+            return 0;
     }
 }
 
@@ -261,11 +249,11 @@ function valorFinanceiro(transacao: TransacaoExtendida): number {
         case "venda":
             return (transacao.quantidade || 0) * (transacao.valor || 0) - (transacao.taxas || 0);
         case "dividendos":
-            return (transacao.valor || 0) * transacao.quantidadeTransacao;
+            return (transacao.valor || 0) * transacao.quantidadeAcumulada;
         case "jcp":
-            return (transacao.valor || 0) * 0.85 * transacao.quantidadeTransacao;
+            return (transacao.valor || 0) * 0.85 * transacao.quantidadeAcumulada;
         case "amortização":
-            return (transacao.valor || 0) * transacao.quantidadeTransacao;
+            return (transacao.valor || 0) * transacao.quantidadeAcumulada;
         default:
             return 0;
     }
@@ -278,7 +266,7 @@ function valorContabil(transacao: TransacaoExtendida): number {
         case "amortização":
             return valorFinanceiro(transacao);
         case "bonificação":
-            return -(transacao.valor || 0) * transacao.quantidadeTransacao;
+            return -(transacao.valor || 0) * transacao.quantidadeAcumulada;
         default:
             return 0;
     }   
