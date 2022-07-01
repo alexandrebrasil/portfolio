@@ -56,9 +56,9 @@ export class PosicaoComponent implements OnChanges {
         this.operacoesFechadas = transacoes.filter(tx => tx.tipo === "venda").map(venda => ({
             data: venda.data,
             valor: venda.valorFinanceiro,
-            quantidade: venda.quantidade || 0,
-            resultadoFinanceiro: venda.valorFinanceiro - venda.precoMedioFinanceiro * (venda.quantidade || 0),
-            resultadoContabil: venda.valorFinanceiro - venda.precoMedio * (venda.quantidade || 0)
+            quantidade: venda.tipo === 'venda' ? (venda.quantidade || 0) : 0,
+            resultadoFinanceiro: venda.valorFinanceiro - venda.precoMedioFinanceiro * (venda.tipo === 'venda' ? (venda.quantidade || 0) : 0),
+            resultadoContabil: venda.valorFinanceiro - venda.precoMedio * (venda.tipo === 'venda' ? (venda.quantidade || 0) : 0)
         }));
 
         this.resultadoFinanceiroAcumulado = this.operacoesFechadas.reduce((res, op) => res + op.resultadoFinanceiro, 0);

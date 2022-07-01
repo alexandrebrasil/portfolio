@@ -27,8 +27,17 @@ export class LedgerComponent implements OnChanges {
         this.custoLiquido = -ultimaTransacao?.quantidadeAcumulada * ultimaTransacao?.precoMedioFinanceiro || 0;
         this.quantidadeAtual = ultimaTransacao?.quantidadeAcumulada || 0;
         
-        this.resultadoFinanceiroAcumulado = this.transacoes?.filter(tx => tx.tipo === 'venda').map(tx => tx.valorFinanceiro - tx.precoMedioFinanceiro * (tx.quantidade || 0)).reduce((r1, r2) => r1 + r2, 0);
-        this.resultadoAcumulado = this.transacoes?.filter(tx => tx.tipo === 'venda').map(tx => tx.valorContabil - tx.precoMedio * (tx.quantidade || 0)).reduce((r1, r2) => r1 + r2, 0);
+        this.resultadoFinanceiroAcumulado = 
+            this.transacoes
+                ?.filter(tx => tx.tipo === 'venda')
+                .map(tx => tx.tipo === 'venda' ? (tx.valorFinanceiro - tx.precoMedioFinanceiro * (tx.quantidade || 0)) : 0)
+                .reduce((r1, r2) => r1 + r2, 0);
+
+        this.resultadoAcumulado = 
+            this.transacoes
+                ?.filter(tx => tx.tipo === 'venda')
+                .map(tx => tx.tipo === 'venda' ? (tx.valorContabil - tx.precoMedio * (tx.quantidade || 0)) : 0)
+                .reduce((r1, r2) => r1 + r2, 0);
     }
 
 

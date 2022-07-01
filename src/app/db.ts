@@ -100,19 +100,67 @@ export type TipoAtivo = 'ação' | 'fundo-imobiliario';
 
 export type TipoEvento = 'compra' | 'venda' | 'jcp' | 'dividendos' | 'bonificação' | 'grupamento' | 'desdobramento' | 'amortização';
 
-export interface Evento {
-    id?: number,
+export type Evento = Compra | Venda | JCP | Dividendos | Bonificacao | Grupamento | Desdobramento | Amortizacao;
+
+export interface EventoBase {
+    id: number,
+    tipo: TipoEvento,
     ativo: string,
-    tipo: TipoEvento
     data: string
-    quantidade?: number
-    multiplicador?: number
-    dataEx?: string
-    valor?: number
-    taxas?: number
 }
 
-export interface TransacaoExtendida extends Evento {
+export interface EventoTransacao extends EventoBase {
+    tipo: 'compra' | 'venda',
+    quantidade: number,
+    valor: number,
+    taxas: number
+}
+export interface Compra extends EventoTransacao {
+    tipo: 'compra'    
+}
+
+export interface Venda extends EventoTransacao {
+    tipo: 'venda'
+}
+
+export interface EventoMultiplicador extends EventoBase {
+    tipo: 'bonificação' | 'grupamento' | 'desdobramento'
+    multiplicador: number
+}
+
+export interface Grupamento extends EventoMultiplicador {
+    tipo: 'grupamento'
+}
+
+export interface Desdobramento extends EventoMultiplicador {
+    tipo: 'desdobramento'
+}
+
+export interface Bonificacao extends EventoMultiplicador {
+    tipo: 'bonificação',
+    valor: number
+}
+
+export interface EventoFinanceiro extends EventoBase {
+    tipo: 'jcp' | 'dividendos' | 'amortização',
+    valor: number,
+    dataEx: string
+}
+
+export interface JCP extends EventoFinanceiro {
+    tipo: 'jcp'
+}
+
+export interface Dividendos extends EventoFinanceiro {
+    tipo: 'dividendos'
+}
+
+export interface Amortizacao extends EventoFinanceiro {
+    tipo: 'amortização'
+}
+
+//FIXME: repensar transação extendida
+export type TransacaoExtendida = Evento & {
     valorFinanceiro: number;
     valorContabil: number;
 
@@ -145,8 +193,8 @@ function calculaPrecoMedio(transacoes: TransacaoExtendida[], preco: 'precoMedioF
 }
 
 function ordenacaoDataEx(t1: Evento, t2: Evento) {
-    let data1 = t1.dataEx || t1.data,
-        data2 = t2.dataEx || t2.data;
+    let data1 = (t1.tipo === 'jcp' || t1.tipo === 'dividendos' || t1.tipo === 'amortização') ? t1.dataEx : t1.data,
+        data2 = (t2.tipo === 'jcp' || t2.tipo === 'dividendos' || t2.tipo === 'amortização') ? t2.dataEx : t2.data;
 
     if(data1 !== data2) {
         return data1.localeCompare(data2);
