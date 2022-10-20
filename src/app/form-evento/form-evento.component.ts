@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
 import * as moment from 'moment';
 import { Ativo, PortfolioDb } from "../db";
 
@@ -16,7 +16,7 @@ export class FormEventoComponent {
     @Output()
     onNovoEvento = new EventEmitter<void>();
 
-    novoEvento: FormGroup;
+    novoEvento: UntypedFormGroup;
 
     tituloQuantidade: string;
     tituloValor: string;
@@ -24,7 +24,7 @@ export class FormEventoComponent {
     tituloValorTotal: string;
     tituloMultiplicador: string;
 
-    constructor(fb: FormBuilder, private db: PortfolioDb) {
+    constructor(fb: UntypedFormBuilder, private db: PortfolioDb) {
         this.novoEvento = fb.group({
             tipo: ['compra', Validators.required],
             data: [moment(), Validators.required],

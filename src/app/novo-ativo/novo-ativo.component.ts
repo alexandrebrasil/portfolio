@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
 import { MatDialogRef } from "@angular/material/dialog";
 import { Ativo } from "src/app/db";
 
@@ -8,9 +8,9 @@ import { Ativo } from "src/app/db";
     styleUrls: [ './novo-ativo.component.scss' ]
 })
 export class NovoAtivoDialog {
-    ativo: FormGroup;
+    ativo: UntypedFormGroup;
 
-    constructor(fb: FormBuilder, private dialogRef: MatDialogRef<NovoAtivoDialog, Ativo>){
+    constructor(fb: UntypedFormBuilder, private dialogRef: MatDialogRef<NovoAtivoDialog, Ativo>){
         this.ativo = fb.group({
             ticker: [null, Validators.required],
             empresa: [null, Validators.required],
