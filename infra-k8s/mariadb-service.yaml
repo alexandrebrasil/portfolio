@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mariadb
+  labels:
+    app: portfolio
+    component: database
+spec:
+  selector:
+    app: portfolio
+    component: database
+  ports:
+    - protocol: TCP
+      port: 3306

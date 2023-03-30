@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mariadb
+  labels:
+    app: portfolio
+    component: database
+spec: 
+  replicas: 1
+  selector:
+    matchLabels:
+      app: portfolio
+      component: database
+  template: 
+    metadata:
+      labels:
+        app: portfolio
+        component: database
+    spec: 
+      containers: 
+      - name: mariadb
+        image: mariadb:10.11.2
+        resources:
+          limits:
+            memory: 1024Mi
+            cpu: "250m"            
+        ports:
+        - containerPort: 3306 
+        volumeMounts:
+          - mountPath: /var/lib/mysql
+            name: data
+        env:
+        - name: MARIADB_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mariadb-root-secret
+              key: password
+        - name: MARIADB_DATABASE
+          value: portfolio
+        - name: MARIADB_USER
+          valueFrom:
+            secretKeyRef:
+              name: mariadb-user-secret
+              key: username
+        - name: MARIADB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mariadb-user-secret
+              key: password
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: mariadb-volume-claim
+

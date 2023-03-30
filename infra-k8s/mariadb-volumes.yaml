@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mariadb-volume
+  labels:
+    app: portfolio
+spec:
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: local-storage
+  accessModes: 
+    - ReadWriteOnce
+  capacity: 
+    storage: 20Gi
+  local:
+    path: /run/desktop/mnt/host/d/Development/workspace/portfolio/data
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - docker-desktop
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mariadb-volume-claim
+  labels:
+    app: portfolio
+spec:
+  storageClassName: local-storage
+  accessModes:
+    - ReadWriteOnce
+  resources: 
+    requests:
+      storage: 10Gi
