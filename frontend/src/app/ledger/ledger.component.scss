@@ -15,7 +15,9 @@ mat-table {
     .mat-column-resultadoFinanceiro,
     .mat-column-resultado,
     .mat-column-pf,
-    .mat-column-quantidade {
+    .mat-column-quantidade,
+    .mat-column-retorno, 
+    .mat-column-retornoAnual {
         justify-content: flex-end;
         text-align: right;
     }

@@ -106,6 +106,6 @@
     </mat-tab>
     <mat-tab label="Histórico de eventos">
         <portfolio-form-evento [ativo]="ativo" (onNovoEvento)="carregaTransacoes()"></portfolio-form-evento>
-        <portfolio-ledger [transacoes]="transacoes" (onDeleteTransacao)="removeTransacao($event)"></portfolio-ledger>
+        <portfolio-ledger [transacoes]="transacoes" [preco-mercado]="ativo.precoMercado" (onDeleteTransacao)="removeTransacao($event)"></portfolio-ledger>
     </mat-tab>
 </mat-tab-group>

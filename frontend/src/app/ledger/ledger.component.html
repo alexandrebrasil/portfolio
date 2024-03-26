@@ -1,4 +1,4 @@
-<mat-table [dataSource]="transacoes">
+<mat-table [dataSource]="_transacoes">
     <ng-container matColumnDef="data">
         <mat-header-cell *matHeaderCellDef>Data evento</mat-header-cell>
         <mat-cell *matCellDef="let tx" [class.futuro]="(tx.dataEx || tx.data) > hoje">
@@ -66,6 +66,27 @@
             </ng-container>
         </mat-cell>
         <mat-footer-cell *matFooterCellDef>{{resultadoAcumulado | currency }}</mat-footer-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="retorno">
+        <mat-header-cell *matHeaderCellDef>Retorno</mat-header-cell>
+        <mat-cell *matCellDef="let transacao"  [class.positiva]="transacao.retorno > 0" [class.negativa]="transacao.retorno < 0">
+            <ng-container *ngIf="transacao.possuiRetorno">
+                {{ transacao.retorno | percent:"0.2" }}
+            </ng-container>
+        </mat-cell>
+        <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+    </ng-container>
+
+
+    <ng-container matColumnDef="retornoAnual">
+        <mat-header-cell *matHeaderCellDef>Retorno anual</mat-header-cell>
+        <mat-cell *matCellDef="let transacao" [class.positiva]="transacao.retornoAnual > 0" [class.negativa]="transacao.retornoAnual < 0">
+            <ng-container *ngIf="transacao.possuiRetorno">
+                {{ transacao.retornoAnual | percent:"0.2" }}
+            </ng-container>
+        </mat-cell>
+        <mat-footer-cell *matFooterCellDef></mat-footer-cell>
     </ng-container>
 
     <ng-container matColumnDef="acoes">
