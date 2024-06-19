@@ -1,25 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: portfolio
   name: mariadb
   labels:
     app: portfolio
-    component: database
+    tier: database
 spec: 
   replicas: 1
   selector:
     matchLabels:
       app: portfolio
-      component: database
+      tier: database
   template: 
     metadata:
       labels:
         app: portfolio
-        component: database
+        tier: database
     spec: 
       containers: 
       - name: mariadb
-        image: mariadb:10.11.2
+        image: mariadb:11.4.2
         resources:
           limits:
             memory: 1024Mi
@@ -36,7 +37,10 @@ spec:
               name: mariadb-root-secret
               key: password
         - name: MARIADB_DATABASE
-          value: portfolio
+          valueFrom:
+            configMapKeyRef:
+              name: portfolio-config
+              key: database-name
         - name: MARIADB_USER
           valueFrom:
             secretKeyRef:

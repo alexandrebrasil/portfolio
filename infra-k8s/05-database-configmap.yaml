@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: portfolio
+  name: portfolio-config
+  labels:
+    app: portfolio
+data:
+  database-name: portfolio

@@ -1,9 +1,11 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
+  namespace: portfolio
   name: mariadb-volume
   labels:
     app: portfolio
+    tier: database
 spec:
   persistentVolumeReclaimPolicy: Delete
   storageClassName: local-storage
@@ -20,7 +22,7 @@ spec:
             - key: kubernetes.io/hostname
               operator: In
               values:
-                - docker-desktop
+              - docker-desktop
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -28,6 +30,7 @@ metadata:
   name: mariadb-volume-claim
   labels:
     app: portfolio
+    tier: database
 spec:
   storageClassName: local-storage
   accessModes:
