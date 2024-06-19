@@ -1,4 +1,4 @@
-package alexandre.brasil.portfolio.portfoliobatch;
+package alexandre.brasil.portfolio.batch;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,4 +1,4 @@
-package alexandre.brasil.portfolio.portfoliobatch;
+package alexandre.brasil.portfolio.batch;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

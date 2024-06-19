@@ -8,11 +8,14 @@
 		<version>3.0.5</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
+	
 	<groupId>alexandre.brasil.portfolio</groupId>
-	<artifactId>portfolio-batch</artifactId>
+	<artifactId>batch</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>portfolio-batch</name>
-	<description>Demo project for Spring Boot</description>
+
+	<name>batch</name>
+	<description>Cargas de dados de fontes externas para os cálculos de portfolio</description>
+
 	<properties>
 		<java.version>17</java.version>
 	</properties>
