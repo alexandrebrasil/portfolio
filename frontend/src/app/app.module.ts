@@ -10,11 +10,12 @@ import { HistoricoOperacoesComponent } from './historico-operacoes/historico-ope
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialogModule } from '@angular/material/dialog';
-import { MatExpansionModule } from '@angular/material/expansion'
-import { MatFormFieldModule, MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field'
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -22,16 +23,16 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { PortfolioDb } from './db';
 import { LedgerComponent } from './ledger/ledger.component';
 
-import localePt from '@angular/common/locales/pt';
 import { registerLocaleData } from '@angular/common';
-import { TipoEventoPipe } from './pipes/tipo.pipe';
+import localePt from '@angular/common/locales/pt';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
-import { PosicaoComponent } from './posicao/posicao.component';
+import { AtivosComponent } from './ativos/ativos.component';
 import { FormEventoComponent } from './form-evento/form-evento.component';
 import { NovoAtivoDialog } from './novo-ativo/novo-ativo.component';
+import { TipoEventoPipe } from './pipes/tipo.pipe';
 import { PortfolioComponent } from './portfolio/portfolio.component';
-import { AtivosComponent } from './ativos/ativos.component';
+import { PosicaoComponent } from './posicao/posicao.component';
 
 registerLocaleData(localePt);
 
@@ -70,6 +71,7 @@ registerLocaleData(localePt);
         MatSelectModule,
         MatTableModule,
         MatTabsModule,
+        MatSlideToggleModule,
         MatTooltipModule,
 
         MatMomentDateModule  

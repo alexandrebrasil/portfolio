@@ -2,6 +2,9 @@
     <mat-icon>add</mat-icon>
 </button>
 
+<div class="mat-title filtros">
+    <mat-slide-toggle [formControl]="apenasAtivos">Apenas posições ativas</mat-slide-toggle>
+</div>
 <div class="mat-title">Ações</div>
 <mat-accordion multi>
     <mat-expansion-panel *ngFor="let ativo of acoes$ | async; trackBy: trackByAtivo">

@@ -2,6 +2,8 @@ import { Component, EventEmitter } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { Ativo, PortfolioDb } from "../db";
 import { NovoAtivoDialog } from "../novo-ativo/novo-ativo.component";
+import { Observable } from "rxjs";
+import { FormControl } from "@angular/forms";
 
 
 @Component({
@@ -9,16 +11,24 @@ import { NovoAtivoDialog } from "../novo-ativo/novo-ativo.component";
     styleUrls: [ './historico-operacoes.component.scss' ]
 })
 export class HistoricoOperacoesComponent {
-    acoes$ = new EventEmitter<Ativo[]>();
-    fundos$ = new EventEmitter<Ativo[]>();
+    acoes$ = new Observable<Ativo[]>();
+    fundos$ = new Observable<Ativo[]>();
+
+    apenasAtivos = new FormControl(true);
+
+    
 
     constructor(private db: PortfolioDb, private dialog: MatDialog) {
         this.atualizaPosicao();
+        this.apenasAtivos.valueChanges.subscribe(_ => this.atualizaPosicao())
     }
 
     async atualizaPosicao() {
-        this.acoes$.emit(await this.db.ativosPorTipo("ação"));
-        this.fundos$.emit(await this.db.ativosPorTipo("fundo-imobiliario"));
+        let posicoesAtivas = this.apenasAtivos.value;
+
+        console.log('Posições', posicoesAtivas);
+        this.acoes$ = posicoesAtivas ? this.db.posicoesAtivas('ação') : this.db.ativosPorTipo("ação");
+        this.fundos$ = posicoesAtivas  ? this.db.posicoesAtivas('fundo-imobiliario') : this.db.ativosPorTipo("fundo-imobiliario");
     }
 
     trackByAtivo(index: number, ativo: Ativo) {

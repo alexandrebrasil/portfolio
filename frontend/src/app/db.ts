@@ -28,8 +28,8 @@ export class PortfolioDb extends Dexie {
         this.ativos = this.table('ativos');
     }
 
-    async ativosPorTipo(tipo: TipoAtivo) {
-        return this.ativos.where('tipo').equals(tipo).sortBy('ticker');
+    ativosPorTipo(tipo: TipoAtivo) {
+        return from(this.ativos.where('tipo').equals(tipo).sortBy('ticker'));
     }
 
     posicoesAtivas(tipo: TipoAtivo) {
