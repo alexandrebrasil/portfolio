@@ -11,7 +11,7 @@ export class PosicaoComponent implements OnChanges {
     @Input()
     ativo: Ativo;
 
-    colunas = ['data', 'valor', 'quantidade', 'resultadoFinanceiro', 'resultadoContabil'];
+    colunas = ['data', 'quantidade', 'precoVenda', 'valor', 'precoMedioFinanceiro', 'resultadoFinanceiro', 'precoMedioContabil', 'resultadoContabil'];
 
     transacoes: TransacaoExtendida[];
     quantidadeAtual: number;
@@ -49,8 +49,11 @@ export class PosicaoComponent implements OnChanges {
             data: venda.data,
             valor: venda.valorFinanceiro,
             quantidade: venda.tipo === 'venda' ? (venda.quantidade || 0) : 0,
+            precoMedioFinanceiro: venda.precoMedioFinanceiro,
             resultadoFinanceiro: venda.valorFinanceiro - venda.precoMedioFinanceiro * (venda.tipo === 'venda' ? (venda.quantidade || 0) : 0),
-            resultadoContabil: venda.valorFinanceiro - venda.precoMedio * (venda.tipo === 'venda' ? (venda.quantidade || 0) : 0)
+            precoMedioContabil: venda.precoMedio,
+            resultadoContabil: venda.valorFinanceiro - venda.precoMedio * (venda.tipo === 'venda' ? (venda.quantidade || 0) : 0),
+            precoVenda: venda.tipo === 'venda' && venda.valor
         }));
 
         this.resultadoFinanceiroAcumulado = this.operacoesFechadas.reduce((res, op) => res + op.resultadoFinanceiro, 0);
@@ -68,6 +71,9 @@ export class PosicaoComponent implements OnChanges {
 interface Operacao {
     data: string;
     quantidade: number;
+    precoVenda: number
+    precoMedioFinanceiro: number;
     resultadoFinanceiro: number;
+    precoMedioContabil: number;
     resultadoContabil: number;
 }

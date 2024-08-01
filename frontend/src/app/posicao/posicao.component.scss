@@ -19,6 +19,10 @@
 
 .operacoes-fechadas {
     .mat-column-quantidade,
+    .mat-column-valor,
+    .mat-column-precoVenda,
+    .mat-column-precoMedioContabil,
+    .mat-column-precoMedioFinanceiro,
     .mat-column-resultadoFinanceiro,
     .mat-column-resultadoContabil {
         text-align: right;

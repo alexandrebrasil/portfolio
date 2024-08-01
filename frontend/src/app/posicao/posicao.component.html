@@ -66,6 +66,28 @@
                 </mat-cell>
                 <mat-footer-cell *matFooterCellDef>Total</mat-footer-cell>
             </ng-container>
+            <ng-container matColumnDef="precoVenda">
+                <mat-header-cell *matHeaderCellDef>Preço venda</mat-header-cell>
+                <mat-cell *matCellDef="let operacao" [class.lucro]="operacao.precoVenda > operacao.precoMedioFinanceiro" [class.prejuizo]="operacao.precoVenda < operacao.precoMedioFinanceiro">
+                    {{operacao.precoVenda | currency}}
+                </mat-cell>
+                <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+            </ng-container>
+            <ng-container matColumnDef="precoMedioContabil">
+                <mat-header-cell *matHeaderCellDef>Preço médio contábil</mat-header-cell>
+                <mat-cell *matCellDef="let operacao"  [class.lucro]="operacao.precoVenda > operacao.precoMedioContabil" [class.prejuizo]="operacao.precoVenda < operacao.precoMedioContabil">
+                    {{operacao.precoMedioContabil | currency}}
+                </mat-cell>
+                <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+            </ng-container>
+            <ng-container matColumnDef="precoMedioFinanceiro">
+                <mat-header-cell *matHeaderCellDef>Preço médio</mat-header-cell>
+                <mat-cell *matCellDef="let operacao" [class.lucro]="operacao.precoVenda > operacao.precoMedioFinanceiro" [class.prejuizo]="operacao.precoVenda < operacao.precoMedioFinanceiro">
+                    {{operacao.precoMedioFinanceiro | currency}}
+                </mat-cell>
+                <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+            </ng-container>
+
             <ng-container matColumnDef="quantidade">
                 <mat-header-cell *matHeaderCellDef>Quantidade</mat-header-cell>
                 <mat-cell *matCellDef="let operacao">
