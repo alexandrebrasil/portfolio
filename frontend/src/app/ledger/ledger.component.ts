@@ -9,7 +9,7 @@ import * as moment from "moment";
     styleUrls: [ './ledger.component.scss' ]
 })
 export class LedgerComponent implements OnChanges {
-    colunas = ['data', 'data-ex', 'tipo', 'unitario', 'quantidade', 'valorFinanceiro', 'resultadoFinanceiro', 'resultado', 'retornoAnual', 'retorno', 'acoes'];
+    colunas = ['data', 'data-ex', 'tipo', 'unitario', 'quantidade', 'valorFinanceiro', 'retornoAnual', 'retorno', 'pm', 'acoes'];
 
     resultadoFinanceiroAcumulado: number;
     custoLiquido: number;
@@ -122,7 +122,7 @@ export class LedgerComponent implements OnChanges {
 
                 t.finalizada = quantidade <= 0;
                 t.possuiRetorno = true;
-                
+
                 let irr = xirr(transacoesIrr);
                 t.retornoAnual = convertRate(irr.rate, RateInterval.Year)
                 t.retorno = convertRate(irr.rate, irr.days)

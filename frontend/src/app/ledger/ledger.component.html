@@ -6,6 +6,7 @@
         </mat-cell>
         <mat-footer-cell *matFooterCellDef></mat-footer-cell>
     </ng-container>
+
     <ng-container matColumnDef="data-ex">
         <mat-header-cell *matHeaderCellDef>Data liquidação</mat-header-cell>
         <mat-cell *matCellDef="let tx"  [class.futuro]="tx.data > hoje">
@@ -13,6 +14,7 @@
         </mat-cell>
         <mat-footer-cell *matFooterCellDef></mat-footer-cell>
     </ng-container>
+    
     <ng-container matColumnDef="tipo">
         <mat-header-cell *matHeaderCellDef>Tipo</mat-header-cell>
         <mat-cell *matCellDef="let transacao">
@@ -27,8 +29,8 @@
     </ng-container>
     <ng-container matColumnDef="unitario">
         <mat-header-cell *matHeaderCellDef>Valor unitário</mat-header-cell>
-        <mat-cell *matCellDef="let transacao">
-            {{transacao.valor | currency:'BRL':'symbol':'1.2-8'}}
+        <mat-cell *matCellDef="let transacao" [matTooltip]="transacao.valor | currency:'BRL':'symbol':'1.2-8'">
+            {{transacao.valor | currency}}
         </mat-cell>
         <mat-footer-cell *matFooterCellDef></mat-footer-cell>
     </ng-container>
@@ -41,7 +43,7 @@
     </ng-container>
 
     <ng-container matColumnDef="valorFinanceiro">
-        <mat-header-cell *matHeaderCellDef>Valor financeiro</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef>Valor</mat-header-cell>
         <mat-cell *matCellDef="let transacao">
             {{ transacao.valorFinanceiro ? (transacao.valorFinanceiro | currency) : '-'}}
         </mat-cell>
@@ -56,6 +58,14 @@
             </ng-container>
         </mat-cell>
         <mat-footer-cell *matFooterCellDef>{{resultadoFinanceiroAcumulado | currency}}</mat-footer-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="pm">
+        <mat-header-cell *matHeaderCellDef>Preço médio (C / F)</mat-header-cell>
+        <mat-cell *matCellDef="let transacao">
+            {{transacao.precoMedio | currency}} / {{transacao.precoMedioFinanceiro | currency}}
+        </mat-cell>
+        <mat-footer-cell *matFooterCellDef></mat-footer-cell>
     </ng-container>
 
     <ng-container matColumnDef="resultado">

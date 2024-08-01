@@ -10,6 +10,14 @@ mat-table {
     max-height: 500px;
     overflow: auto;
 
+    .mat-cell, 
+    .mat-header-cell,
+    .mat-footer-cell {
+        &:not(:last-child) {
+            padding-right: 16px;
+        }
+    }
+
     .mat-column-valorFinanceiro,
     .mat-column-unitario,
     .mat-column-resultadoFinanceiro,
@@ -23,8 +31,13 @@ mat-table {
     }
 
     .mat-column-acoes {
-        width: 90px;
+        max-width: 70px;
         justify-content: flex-end;
+    }
+
+    .mat-column-tipo,
+    .mat-column-pm {
+        min-width: 160px;
     }
 
     .mat-footer-cell {
