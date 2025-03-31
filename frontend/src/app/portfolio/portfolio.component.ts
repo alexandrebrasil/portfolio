@@ -1,11 +1,13 @@
 import { Component, EventEmitter, OnInit } from "@angular/core";
 import { map, tap } from "rxjs/operators";
 import { Ativo, PortfolioDb, TipoAtivo } from "../db";
+import { NgTemplateOutlet, PercentPipe, CurrencyPipe } from "@angular/common";
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatFooterCellDef, MatFooterCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatFooterRowDef, MatFooterRow } from "@angular/material/table";
 
 @Component({
     templateUrl: './portfolio.component.html',
     styleUrls: ['./portfolio.component.scss'],
-    standalone: false
+    imports: [NgTemplateOutlet, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatFooterCellDef, MatFooterCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatFooterRowDef, MatFooterRow, PercentPipe, CurrencyPipe]
 })
 export class PortfolioComponent implements OnInit {
     constructor(private db: PortfolioDb) {}

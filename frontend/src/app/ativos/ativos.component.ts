@@ -1,10 +1,11 @@
 import { Component } from "@angular/core";
 import { PortfolioDb } from "../db";
+import { MatButton } from "@angular/material/button";
 
 @Component({
     templateUrl: './ativos.component.html',
     styleUrls: ['./ativos.component.scss'],
-    standalone: false
+    imports: [MatButton]
 })
 export class AtivosComponent {
     constructor(private db: PortfolioDb) {}

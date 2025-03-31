@@ -1,12 +1,17 @@
 import { TEXT_COLUMN_OPTIONS } from "@angular/cdk/table";
 import { Component, Input, OnChanges } from "@angular/core";
 import { Ativo, PortfolioDb, TransacaoExtendida } from "../db";
+import { MatTabGroup, MatTab } from "@angular/material/tabs";
+import { NgIf, DecimalPipe, CurrencyPipe, DatePipe } from "@angular/common";
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatFooterCellDef, MatFooterCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatFooterRowDef, MatFooterRow } from "@angular/material/table";
+import { FormEventoComponent } from "../form-evento/form-evento.component";
+import { LedgerComponent } from "../ledger/ledger.component";
 
 @Component({
     selector: 'portfolio-posicao',
     templateUrl: './posicao.component.html',
     styleUrls: ['./posicao.component.scss'],
-    standalone: false
+    imports: [MatTabGroup, MatTab, NgIf, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatFooterCellDef, MatFooterCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatFooterRowDef, MatFooterRow, FormEventoComponent, LedgerComponent, DecimalPipe, CurrencyPipe, DatePipe]
 })
 export class PosicaoComponent implements OnChanges {
     @Input()

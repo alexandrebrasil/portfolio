@@ -1,10 +1,7 @@
 import { Injectable, Pipe, PipeTransform } from "@angular/core";
 import { TipoEvento } from "../db";
 
-@Pipe({
-    name: 'tipoEvento',
-    standalone: false
-})
+@Pipe({ name: 'tipoEvento' })
 export class TipoEventoPipe implements PipeTransform {
     transform(value: any, ...args: any[]) {
         switch(value as TipoEvento) {

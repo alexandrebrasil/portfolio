@@ -1,14 +1,20 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup, Validators, ReactiveFormsModule } from "@angular/forms";
 import moment from 'moment';
 import { Ativo, PortfolioDb } from "../db";
+import { MatFormField, MatLabel, MatSuffix } from "@angular/material/form-field";
+import { MatSelect, MatOption } from "@angular/material/select";
+import { NgIf } from "@angular/common";
+import { MatInput } from "@angular/material/input";
+import { MatDatepickerInput, MatDatepickerToggle, MatDatepicker } from "@angular/material/datepicker";
+import { MatButton } from "@angular/material/button";
 
 
 @Component({
     selector: 'portfolio-form-evento',
     templateUrl: './form-evento.component.html',
     styleUrls: ['./form-evento.component.scss'],
-    standalone: false
+    imports: [ReactiveFormsModule, MatFormField, MatLabel, MatSelect, MatOption, NgIf, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, MatButton]
 })
 export class FormEventoComponent {
     @Input()

@@ -1,24 +1,28 @@
-<h1 class="mat-h1">Novo ativo</h1>
-<form [formGroup]="ativo">
-    <mat-form-field class="empresa">
-        <mat-label>Empresa</mat-label>
-        <input matInput formControlName="empresa">
-    </mat-form-field>
-    <mat-form-field class="ticker">
-        <mat-label>Ticker</mat-label>
-        <input matInput formControlName="ticker">
-    </mat-form-field>
-    <mat-form-field class="tipo">
-        <mat-label>Tipo</mat-label>
-        <mat-select formControlName="tipo">
-            <mat-option value="ação">Ações</mat-option>
-            <mat-option value="fundo-imobiliario">Fundo imobiliário</mat-option>
-        </mat-select>
-    </mat-form-field>
-    <mat-form-field class="preco">
-        <mat-label>Preço de mercado</mat-label>
-        <input matInput type="number" formControlName="precoMercado">
-    </mat-form-field>
-</form>
-<button mat-stroked-button color="primary" [disabled]="ativo.invalid" (click)="gravar()">Gravar</button>
-<button mat-stroked-button (click)="fechar()">Cancelar</button>
+<h1 mat-dialog-title>Novo ativo</h1>
+<mat-dialog-content>
+    <form [formGroup]="ativo">
+        <mat-form-field class="empresa">
+            <mat-label>Empresa</mat-label>
+            <input matInput formControlName="empresa">
+        </mat-form-field>
+        <mat-form-field class="ticker">
+            <mat-label>Ticker</mat-label>
+            <input matInput formControlName="ticker">
+        </mat-form-field>
+        <mat-form-field class="tipo">
+            <mat-label>Tipo</mat-label>
+            <mat-select formControlName="tipo">
+                <mat-option value="ação">Ações</mat-option>
+                <mat-option value="fundo-imobiliario">Fundo imobiliário</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field class="preco">
+            <mat-label>Preço de mercado</mat-label>
+            <input matInput type="number" formControlName="precoMercado">
+        </mat-form-field>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-stroked-button color="primary" [disabled]="ativo.invalid" (click)="gravar()">Gravar</button>
+    <button mat-stroked-button (click)="fechar()">Cancelar</button>
+</mat-dialog-actions>

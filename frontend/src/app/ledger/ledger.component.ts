@@ -2,12 +2,18 @@ import { Component, EventEmitter, Input, OnChanges, Output } from "@angular/core
 import { TransacaoExtendida } from "../db";
 import { xirr, XirrInput, convertRate, RateInterval }  from 'node-irr';
 import moment from "moment";
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatFooterCellDef, MatFooterCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatFooterRowDef, MatFooterRow } from "@angular/material/table";
+import { NgSwitch, NgSwitchCase, NgIf, DecimalPipe, PercentPipe, CurrencyPipe, DatePipe } from "@angular/common";
+import { MatTooltip } from "@angular/material/tooltip";
+import { MatIconButton } from "@angular/material/button";
+import { MatIcon } from "@angular/material/icon";
+import { TipoEventoPipe } from "../pipes/tipo.pipe";
 
 @Component({
     selector: 'portfolio-ledger',
     templateUrl: './ledger.component.html',
     styleUrls: ['./ledger.component.scss'],
-    standalone: false
+    imports: [MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatFooterCellDef, MatFooterCell, NgSwitch, NgSwitchCase, MatTooltip, NgIf, MatIconButton, MatIcon, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatFooterRowDef, MatFooterRow, DecimalPipe, PercentPipe, CurrencyPipe, DatePipe, TipoEventoPipe]
 })
 export class LedgerComponent implements OnChanges {
     colunas = ['data', 'data-ex', 'tipo', 'unitario', 'quantidade', 'valorFinanceiro', 'retornoAnual', 'retorno', 'pm', 'acoes'];
