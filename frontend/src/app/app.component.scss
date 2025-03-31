@@ -19,7 +19,7 @@
     align-items: center;
     
     .image {
-        color: mat.get-color-from-palette(theme.$portfolio-primary, "darker");
+        color: mat.m2-get-color-from-palette(theme.$portfolio-primary, "darker");
     }
 }
 

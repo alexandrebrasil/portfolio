@@ -5,7 +5,8 @@ import { Ativo, PortfolioDb, TransacaoExtendida } from "../db";
 @Component({
     selector: 'portfolio-posicao',
     templateUrl: './posicao.component.html',
-    styleUrls: [ './posicao.component.scss' ]
+    styleUrls: ['./posicao.component.scss'],
+    standalone: false
 })
 export class PosicaoComponent implements OnChanges {
     @Input()

@@ -5,14 +5,16 @@
     display: block;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version. */
+/* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version. */
 mat-table {
     width: 100%;
     max-height: 500px;
     overflow: auto;
 
-    .mat-cell, 
-    .mat-header-cell,
-    .mat-footer-cell {
+    .mat-mdc-cell, 
+    .mat-mdc-header-cell,
+    .mat-mdc-footer-cell {
         &:not(:last-child) {
             padding-right: 16px;
         }
@@ -40,20 +42,20 @@ mat-table {
         min-width: 160px;
     }
 
-    .mat-footer-cell {
-        color: mat.get-color-from-palette(theme.$portfolio-primary, "default");
+    .mat-mdc-footer-cell {
+        color: mat.m2-get-color-from-palette(theme.$portfolio-primary, "default");
         font-weight: 500;
     }
 
     .positiva {
-        color: mat.get-color-from-palette(theme.$portfolio-primary, "default");
+        color: mat.m2-get-color-from-palette(theme.$portfolio-primary, "default");
     }
     
     .negativa {
-        color: mat.get-color-from-palette(theme.$portfolio-warn, "default");
+        color: mat.m2-get-color-from-palette(theme.$portfolio-warn, "default");
     }
 
     .futuro {
-        color: mat.get-color-from-palette(theme.$portfolio-accent, "default");
+        color: mat.m2-get-color-from-palette(theme.$portfolio-accent, "default");
     }
 }

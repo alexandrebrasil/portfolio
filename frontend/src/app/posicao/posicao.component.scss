@@ -29,15 +29,15 @@
         justify-content: flex-end;
     }
 
-    .mat-footer-cell {
+    .mat-mdc-footer-cell {
         font-weight: 500;
     }
 }
 
 .prejuizo {
-    color: mat.get-color-from-palette(theme.$portfolio-warn, "default");
+    color: mat.m2-get-color-from-palette(theme.$portfolio-warn, "default");
 }
 
 .lucro {
-    color: mat.get-color-from-palette(theme.$portfolio-primary, "default");
+    color: mat.m2-get-color-from-palette(theme.$portfolio-primary, "default");
 }

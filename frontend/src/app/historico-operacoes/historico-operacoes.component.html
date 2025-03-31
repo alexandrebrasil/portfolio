@@ -2,10 +2,10 @@
     <mat-icon>add</mat-icon>
 </button>
 
-<div class="mat-title filtros">
+<div class="mat-headline-6 filtros">
     <mat-slide-toggle [formControl]="apenasAtivos">Apenas posições ativas</mat-slide-toggle>
 </div>
-<div class="mat-title">Ações</div>
+<div class="mat-headline-6">Ações</div>
 <mat-accordion multi>
     <mat-expansion-panel *ngFor="let ativo of acoes$ | async; trackBy: trackByAtivo">
         <mat-expansion-panel-header>
@@ -19,7 +19,7 @@
     </mat-expansion-panel>
 </mat-accordion>
 
-<div class="mat-title fundos-imobiliarios">Fundos imobiliários</div>
+<div class="mat-headline-6 fundos-imobiliarios">Fundos imobiliários</div>
 <mat-accordion multi>
     <mat-expansion-panel *ngFor="let ativo of fundos$ | async; trackBy: trackByAtivo">
         <mat-expansion-panel-header>

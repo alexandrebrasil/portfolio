@@ -1,12 +1,13 @@
 import { Component, EventEmitter, Input, OnChanges, Output } from "@angular/core";
 import { TransacaoExtendida } from "../db";
 import { xirr, XirrInput, convertRate, RateInterval }  from 'node-irr';
-import * as moment from "moment";
+import moment from "moment";
 
 @Component({
     selector: 'portfolio-ledger',
     templateUrl: './ledger.component.html',
-    styleUrls: [ './ledger.component.scss' ]
+    styleUrls: ['./ledger.component.scss'],
+    standalone: false
 })
 export class LedgerComponent implements OnChanges {
     colunas = ['data', 'data-ex', 'tipo', 'unitario', 'quantidade', 'valorFinanceiro', 'retornoAnual', 'retorno', 'pm', 'acoes'];

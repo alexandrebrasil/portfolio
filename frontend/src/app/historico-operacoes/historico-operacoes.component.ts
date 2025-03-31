@@ -8,7 +8,8 @@ import { FormControl } from "@angular/forms";
 
 @Component({
     templateUrl: './historico-operacoes.component.html',
-    styleUrls: [ './historico-operacoes.component.scss' ]
+    styleUrls: ['./historico-operacoes.component.scss'],
+    standalone: false
 })
 export class HistoricoOperacoesComponent {
     acoes$ = new Observable<Ativo[]>();

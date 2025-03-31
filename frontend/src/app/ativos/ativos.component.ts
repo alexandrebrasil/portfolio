@@ -3,7 +3,8 @@ import { PortfolioDb } from "../db";
 
 @Component({
     templateUrl: './ativos.component.html',
-    styleUrls: [ './ativos.component.scss' ]
+    styleUrls: ['./ativos.component.scss'],
+    standalone: false
 })
 export class AtivosComponent {
     constructor(private db: PortfolioDb) {}

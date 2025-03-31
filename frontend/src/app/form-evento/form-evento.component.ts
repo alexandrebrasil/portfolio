@@ -1,13 +1,14 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
-import * as moment from 'moment';
+import moment from 'moment';
 import { Ativo, PortfolioDb } from "../db";
 
 
 @Component({
     selector: 'portfolio-form-evento',
     templateUrl: './form-evento.component.html',
-    styleUrls: [ './form-evento.component.scss' ]
+    styleUrls: ['./form-evento.component.scss'],
+    standalone: false
 })
 export class FormEventoComponent {
     @Input()

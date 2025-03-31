@@ -4,7 +4,8 @@ import { Ativo, PortfolioDb, TipoAtivo } from "../db";
 
 @Component({
     templateUrl: './portfolio.component.html',
-    styleUrls: [ './portfolio.component.scss' ]
+    styleUrls: ['./portfolio.component.scss'],
+    standalone: false
 })
 export class PortfolioComponent implements OnInit {
     constructor(private db: PortfolioDb) {}

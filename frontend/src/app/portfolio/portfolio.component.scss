@@ -5,10 +5,12 @@
     display: block;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version. */
+/* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version. */
 mat-table {
-    .mat-header-cell,
-    .mat-cell,
-    .mat-footer-cell {
+    .mat-mdc-header-cell,
+    .mat-mdc-cell,
+    .mat-mdc-footer-cell {
 
         &:not(:first-of-type) {
             padding-left: 8px;
@@ -43,11 +45,11 @@ mat-table {
     }
 
     .prejuizo {
-        color: mat.get-color-from-palette(theme.$portfolio-warn, "default");
+        color: mat.m2-get-color-from-palette(theme.$portfolio-warn, "default");
     }
     
     .lucro {
-        color: mat.get-color-from-palette(theme.$portfolio-primary, "default");
+        color: mat.m2-get-color-from-palette(theme.$portfolio-primary, "default");
     }
 
     .mat-column-precoMercado {
@@ -69,6 +71,6 @@ mat-table {
     }
 }
 
-.mat-subheading-2:not(:first-of-type){
+.mat-subtitle-1:not(:first-of-type){
     margin-top: 32px;
 }

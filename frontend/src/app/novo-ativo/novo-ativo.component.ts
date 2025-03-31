@@ -5,7 +5,8 @@ import { Ativo } from "src/app/db";
 
 @Component({
     templateUrl: './novo-ativo.component.html',
-    styleUrls: [ './novo-ativo.component.scss' ]
+    styleUrls: ['./novo-ativo.component.scss'],
+    standalone: false
 })
 export class NovoAtivoDialog {
     ativo: UntypedFormGroup;
