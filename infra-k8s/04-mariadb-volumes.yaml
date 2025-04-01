@@ -7,13 +7,13 @@ metadata:
     app: portfolio
     tier: database
 spec:
-  persistentVolumeReclaimPolicy: Delete
-  storageClassName: local-storage
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: manual
   accessModes: 
     - ReadWriteOnce
   capacity: 
     storage: 20Gi
-  local:
+  hostPath:
     path: /run/desktop/mnt/host/d/Development/workspace/portfolio/data
   nodeAffinity:
     required:
@@ -32,7 +32,7 @@ metadata:
     app: portfolio
     tier: database
 spec:
-  storageClassName: local-storage
+  storageClassName: manual
   accessModes:
     - ReadWriteOnce
   resources: 
