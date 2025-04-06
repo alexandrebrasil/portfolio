@@ -23,6 +23,8 @@ import { AtivosComponent } from './app/ativos/ativos.component';
 import { PortfolioComponent } from './app/portfolio/portfolio.component';
 import { ListaMoedaComponent } from './app/moedas/lista/lista-moeda.component';
 import { EdicaoMoedaComponent } from './app/moedas/edicao/edicao-moeda.component';
+import { ListaInstituicaoFinanceiraComponent } from './app/instituicao-financeira/lista/lista-instituicao-financeira.component';
+import { EdicaoInstituicaoFinanceiraComponent } from './app/instituicao-financeira/edicao/edicao-instituicao-financeira.component';
 
 if (environment.production) {
   enableProdMode();
@@ -43,6 +45,18 @@ const routes: Routes = [{
   path: '',
   redirectTo: '/historico',
   pathMatch: 'full'
+}, {
+  component: ListaInstituicaoFinanceiraComponent,
+  path: 'instituicoes-financeiras',
+  children: [
+      {
+          component: EdicaoInstituicaoFinanceiraComponent,
+          path: 'nova' 
+      }, {
+          component: EdicaoInstituicaoFinanceiraComponent,
+          path: ':id' 
+      }
+  ]
 }, {
   component: ListaMoedaComponent,
   path: 'moedas',

@@ -1,0 +1,23 @@
+@if(id()) {
+    <h2>Edição da instituição financeira {{nomeOriginal()}}</h2>
+} @else {
+    <h2>Informe os dados da nova instituição financeira</h2>
+}
+<form [formGroup]="form">
+    <mat-form-field>
+        <mat-label>Nome</mat-label>
+        <input matInput formControlName="nome">
+    </mat-form-field>
+
+    <mat-form-field>
+        <mat-label>Moeda</mat-label>
+        <mat-select formControlName="moeda">
+            @for(moeda of moedas(); track moeda.codigo) {
+                <mat-option [value]="moeda.codigo">{{moeda.nome}}</mat-option>
+            }
+        </mat-select>
+    </mat-form-field>
+</form>
+
+<button mat-stroked-button (click)="salvar()" [disabled]="form.invalid">Salvar</button>
+<button mat-stroked-button (click)="cancelar()">Cancelar</button>

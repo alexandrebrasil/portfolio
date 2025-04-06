@@ -1,10 +1,14 @@
 type Query {
     moedas(codigo: String): [Moeda]
+    instituicoesFinanceiras(id: ID): [InstituicaoFinanceira]
 }
 
 type Mutation {
     "Grava uma moeda. Se o código for fornecido, faz uma atualização. Caso contrário, inclui uma nova instituição financeira"
     moeda(codigo: String!, nome: String!, numero: Int): String!
+
+    "Grava uma instituição financeira. Se o identificador for fornecido, faz uma atualização. Caso contrário, inclui uma nova instituição financeira"
+    instituicaoFinanceira(id: ID, nome: String!, moeda: String!): ID!
 }
 
 "Moedas nas quais os ativos poderão ser emitidos e nas quais as instituições financeiras operarão."
@@ -12,4 +16,12 @@ type Moeda {
     codigo: String!
     nome: String!
     numero: Int!
+}
+
+"Instituições financeiras que hospedam o portfólio"
+type InstituicaoFinanceira {
+    id: ID!
+    nome: String!
+
+    moeda: Moeda!
 }

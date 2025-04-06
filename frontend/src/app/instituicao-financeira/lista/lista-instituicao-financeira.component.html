@@ -1,0 +1,27 @@
+<h1>
+    Instituições financeiras
+    <a mat-fab extended [routerLink]="['./', 'nova']">
+        <mat-icon>add</mat-icon> Nova
+    </a>
+</h1>
+
+@if(! instituicoesFinanceiras()?.length) {
+    <div class="nenhum-cadastro">Nenhuma instituição financeira cadastrada</div>
+} @else {
+    <mat-table [dataSource]="instituicoesFinanceiras()">
+        <ng-container matColumnDef="nome">
+            <mat-header-cell *matHeaderCellDef>Nome</mat-header-cell>
+            <mat-cell *matCellDef="let i">
+                <a [routerLink]="i.id">{{ i.nome }}</a>
+            </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="moeda">
+            <mat-header-cell *matHeaderCellDef>Moeda</mat-header-cell>
+            <mat-cell *matCellDef="let i">{{i.moeda.nome}}</mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="['nome', 'moeda']; sticky: true"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: ['nome', 'moeda']"></mat-row>
+    </mat-table>
+}
+<router-outlet></router-outlet>
