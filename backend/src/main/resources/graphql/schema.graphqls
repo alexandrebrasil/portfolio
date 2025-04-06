@@ -1,0 +1,15 @@
+type Query {
+    moedas(codigo: String): [Moeda]
+}
+
+type Mutation {
+    "Grava uma moeda. Se o código for fornecido, faz uma atualização. Caso contrário, inclui uma nova instituição financeira"
+    moeda(codigo: String!, nome: String!, numero: Int): String!
+}
+
+"Moedas nas quais os ativos poderão ser emitidos e nas quais as instituições financeiras operarão."
+type Moeda {
+    codigo: String!
+    nome: String!
+    numero: Int!
+}

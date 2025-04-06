@@ -21,6 +21,10 @@
     .image {
         color: mat.m2-get-color-from-palette(theme.$portfolio-primary, "darker");
     }
+
+    .active {
+        color: mat.m2-get-color-from-palette(theme.$portfolio-primary, "default");
+    }
 }
 
 .content {

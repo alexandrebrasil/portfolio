@@ -1,0 +1,31 @@
+<h1>
+    Moedas
+    <a mat-fab extended [routerLink]="['./', 'nova']">
+        <mat-icon>add</mat-icon> Nova
+    </a>
+</h1>
+
+@if(! moedas()?.length) {
+    <div class="nenhum-cadastro">Nenhuma moeda cadastrada</div>
+} @else {
+    <mat-table [dataSource]="moedas()">
+        <ng-container matColumnDef="codigo">
+            <mat-header-cell *matHeaderCellDef>Código</mat-header-cell>
+            <mat-cell *matCellDef="let i">
+                <a [routerLink]="i.codigo">{{i.codigo}}</a>
+            </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="nome">
+            <mat-header-cell *matHeaderCellDef>Nome</mat-header-cell>
+            <mat-cell *matCellDef="let i">{{i.nome}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="numero">
+            <mat-header-cell *matHeaderCellDef>Número</mat-header-cell>
+            <mat-cell *matCellDef="let i">{{i.numero}}</mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="['codigo', 'nome', 'numero']; sticky: true"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: ['codigo', 'nome', 'numero']"></mat-row>
+    </mat-table>
+}
+<router-outlet></router-outlet>

@@ -1,0 +1,14 @@
+:host {
+    display: block;
+    margin-top: 16px;
+
+    form {
+        display: grid;
+        grid-template-columns: minmax(100px, 1fr) 6fr minmax(100px, 1fr);
+        gap: 16px;
+    }
+
+    button + button {
+        margin-left: 16px;
+    }
+}
